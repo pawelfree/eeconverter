@@ -1,0 +1,34 @@
+DO   Okres za jaki wnoszona jest oplata do dnia                            
+IDP  Identyfikator platnosci istotny dlawierzyciela                        
+NIP  Numer identyfikacji podatkowej                                        
+NRB  Numer Rachunku Bankowego                                              
+OD   Okres za jaki wnoszona jest oplata od dnia                            
+ODM01Kod odmowy realizacji PZ i GOBI    Brak zgody dluznika do obc. rach.  
+ODM02Kod odmowy realizacji PZ i GOBI    Brak srodkow na rachunku dluznika  
+ODM03Kod odmowy realizacji PZ i GOBI    Rachunek bankowy dluznika zamkniety
+ODM09Kod odmowy realizacji PZ           Zgoda platnika zostala wycofana    
+ODM10Kod odmowy realizacji PZ           Dysp.odwolania niezrealizowanego PZ
+ODM99Kod odmowy realizacji PZ           Zwrot zrealizowanego PZ            
+ODS  Odsetki                                                               
+OKR  Okres, za ktory dokonywana jest    platnosc                           
+PD 01Rodzaj podatku                     Podatek od towarow i uslug (VAT)   
+PD 02Rodzaj podatku                     Podatek akcyzowy                   
+PD 03Rodzaj podatku                     Podatek dochodowy od osob prawnych 
+PD 04Rodzaj podatku                     Podatek dochodowy od osob fizycznyc
+PD 05Rodzaj podatku                     Podatek rolny                      
+PD 06Rodzaj podatku                     Podatek lesny                      
+PD 07Rodzaj podatku                     Oplata skarbowa                    
+PD 08Rodzaj podatku                     Podatek od gier                    
+PD 09Rodzaj podatku                     Podatki i oplaty lokalne           
+PD 10Rodzaj podatku                     Podatek od spadkow i darowizn      
+SFP  Symbol formularza lub platnosci                                       
+TI   Typ identyfikatora i zawartosc id.                                    
+TXT  Tekst wolny                                                           
+TYT01Szczegoly platnosci                Abonament telefoniczny             
+TYT02Szczegoly platnosci                Abonament telewizyjny              
+TYT03Szczegoly platnosci                Czynsz mieszkaniowy                
+TYT04Szczegoly platnosci                Oplata za energie elektryczna      
+TYT05Szczegoly platnosci                Oplata za gaz                      
+TYT06Szczegoly platnosci                Oplata za wode                     
+TYT07Szczegoly platnosci                Skladka ubezpieczeniowa            
+ZOK  Zastepcza Obsluga Kasowa                                              
