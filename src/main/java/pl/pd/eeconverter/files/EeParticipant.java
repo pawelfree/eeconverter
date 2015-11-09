@@ -21,6 +21,10 @@ public class EeParticipant {
 
     private final String headquartersNumber;
 
+    public LocalDate getValidTo() {
+        return validTo;
+    }
+
     private EeParticipant(String participantNumber, LocalDate validFrom, LocalDate validTo, String headquartersNumber) {
         this.participantNumber = participantNumber;
         this.validFrom = validFrom;

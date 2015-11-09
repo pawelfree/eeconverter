@@ -28,6 +28,10 @@ public class EachaParticipant {
 
     private final String settlementSystemId;
 
+    public LocalDate getValidTo() {
+        return validTo;
+    }
+
     private EachaParticipant(String participantBic, String participantName, LocalDate validFrom, LocalDate validTo,
             LocalTime cutoffHour, String executionTime, String settlementSystemId) {
         this.participantBic = participantBic;

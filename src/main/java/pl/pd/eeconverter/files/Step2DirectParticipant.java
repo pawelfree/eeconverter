@@ -25,6 +25,10 @@ public class Step2DirectParticipant {
 
     private final String status;
 
+    public LocalDate getValidTo() {
+        return validTo;
+    }
+
     private Step2DirectParticipant(String participantBic, String participantName, LocalDate validFrom, LocalDate validTo,
             String settlementBic, String status) {
         this.participantBic = participantBic;

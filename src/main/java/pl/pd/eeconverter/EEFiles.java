@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -69,7 +71,8 @@ public class EEFiles {
     public Stream<EachaParticipant> readEachaParticipants(String rrmmdd, String RRMMDD) {
         try {
             return readFile(Paths.get("",subfolder,replaceDate(EachaParticipant.FILE_MASK, rrmmdd, RRMMDD)))
-                    .map(item -> EachaParticipant.getInstance(item));
+                    .map(item -> EachaParticipant.getInstance(item))
+                    .filter(participant -> Objects.isNull(participant.getValidTo()) ? true : !participant.getValidTo().isBefore(LocalDate.now()));
         } catch (IOException ex) {
             Logger.getLogger(EEFiles.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -79,7 +82,8 @@ public class EEFiles {
     public Stream<Step2DirectParticipant> readDirectStep2Participants(String rrrrmmdd) {
         try {
             return readFile(Paths.get("",subfolder,replaceDate(Step2DirectParticipant.FILE_MASK, rrrrmmdd)))
-                    .map(item -> Step2DirectParticipant.getInstance(item));
+                    .map(item -> Step2DirectParticipant.getInstance(item))
+                    .filter(participant -> Objects.isNull(participant.getValidTo()) ? true : !participant.getValidTo().isBefore(LocalDate.now()));
         } catch (IOException ex) {
             Logger.getLogger(EEFiles.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -89,7 +93,8 @@ public class EEFiles {
     public Stream<Step2IndirectParticipant> readIndirectStep2Participants(String rrrrmmdd) {
         try {
             return readFile(Paths.get("",subfolder,replaceDate(Step2IndirectParticipant.FILE_MASK, rrrrmmdd)))
-                    .map(item -> Step2IndirectParticipant.getInstance(item));
+                    .map(item -> Step2IndirectParticipant.getInstance(item))
+                    .filter(participant -> Objects.isNull(participant.getValidTo()) ? true : !participant.getValidTo().isBefore(LocalDate.now()));
         } catch (IOException ex) {
             Logger.getLogger(EEFiles.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -106,8 +111,8 @@ public class EEFiles {
         try {
             return readFile(Paths.get("",subfolder,replaceDate(SctParticipant.FILE_MASK, rrrrmmdd)))
                     .map(item -> SctParticipant.getInstance(item))
-                    .filter(item -> item.getSctIndicator() > 0);
-            
+                    .filter(item -> item.getSctIndicator() > 0)
+                    .filter(participant -> Objects.isNull(participant.getValidTo()) ? true : !participant.getValidTo().isBefore(LocalDate.now()));            
         } catch (IOException ex) {
             Logger.getLogger(EEFiles.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -127,7 +132,8 @@ public class EEFiles {
     public Stream<EeParticipant> readParticipants(String rrrrmmdd) {
         try {
             return readFile(Paths.get("",subfolder,replaceDate(EeParticipant.FILE_MASK, rrrrmmdd)))
-                    .map(item -> EeParticipant.getInstance(item));
+                    .map(item -> EeParticipant.getInstance(item))
+                    .filter(participant -> Objects.isNull(participant.getValidTo()) ? true : !participant.getValidTo().isBefore(LocalDate.now()));
         } catch (IOException ex) {
             Logger.getLogger(EEFiles.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -137,7 +143,8 @@ public class EEFiles {
     public Stream<EeDirectParticipant> readDirectParticipants(String rrrrmmdd) {
         try {
             return readFile(Paths.get("",subfolder,replaceDate(EeDirectParticipant.FILE_MASK, rrrrmmdd)))
-                    .map(item -> EeDirectParticipant.getInstance(item));
+                    .map(item -> EeDirectParticipant.getInstance(item))
+                    .filter(participant -> Objects.isNull(participant.getValidTo()) ? true : !participant.getValidTo().isBefore(LocalDate.now()));
         } catch (IOException ex) {
             Logger.getLogger(EEFiles.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -147,7 +154,8 @@ public class EEFiles {
     public Stream<EeIndirectParticipant> readIndirectParticipants(String rrrrmmdd) {
         try {
             return readFile(Paths.get("",subfolder,replaceDate(EeIndirectParticipant.FILE_MASK, rrrrmmdd)))
-                    .map(item -> EeIndirectParticipant.getInstance(item));
+                    .map(item -> EeIndirectParticipant.getInstance(item))
+                    .filter(participant -> Objects.isNull(participant.getValidTo()) ? true : !participant.getValidTo().isBefore(LocalDate.now()));
         } catch (IOException ex) {
             Logger.getLogger(EEFiles.class.getName()).log(Level.SEVERE, null, ex);
         }

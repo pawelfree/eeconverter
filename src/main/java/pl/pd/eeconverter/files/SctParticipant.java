@@ -33,6 +33,12 @@ public class SctParticipant {
         return sctIndicator;
     }
 
+    public LocalDate getValidTo() {
+        return validTo;
+    }
+    
+    
+
     private SctParticipant(String participantBic, String participantNumber, LocalDate validFrom, LocalDate validTo,
             String mainBicIndicator, String sctIndicator) {
         this.participantBic = participantBic;
