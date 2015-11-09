@@ -28,6 +28,10 @@ public class SepaDirectory {
     public void add(SepaDirectoryItem item) {
         items.add(item);
     }
+    
+    public void addAll(List<SepaDirectoryItem> items) {
+        this.items.addAll(items);
+    }
 
     public List<String> getLines() {
         return items.stream()
@@ -40,6 +44,10 @@ public class SepaDirectory {
             return "";
         }
         return "".concat(item.getBic())
+                .concat(",")
+                .concat(item.getRoutingBic())
+                .concat(",")
+                .concat(item.getSettlementBic())
                 .concat(",")
                 .concat(item.getBankName().trim())
                 .concat(",")

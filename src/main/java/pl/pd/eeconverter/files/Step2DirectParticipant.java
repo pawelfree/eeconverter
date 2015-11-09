@@ -48,16 +48,15 @@ public class Step2DirectParticipant {
 
     public static Step2DirectParticipant getInstance(String line) {
         return new Step2DirectParticipant(line.substring(0, 8),
-                line.substring(8,58),
+                line.substring(8,58).trim(),
                 LocalDate.parse(line.subSequence(58, 66), DateTimeFormatter.ofPattern("yyyyMMdd")),
                 line.substring(66, 74).trim().isEmpty() ? null : LocalDate.parse(line.substring(66, 74), DateTimeFormatter.ofPattern("yyyyMMdd")),
-                line.substring(74,85),
+                line.substring(74,85).trim(),
                 line.substring(85,86)
         );
     }
     
     public SepaDirectoryItem getDirectoryItem() {
-        return new SepaDirectoryItem(participantBic.concat("XXX"), participantName, 3, validFrom,validTo, null);
-        
+        return new SepaDirectoryItem(participantBic,participantBic,settlementBic, participantName,SourceId.SEPA_Direct.ordinal(), validFrom,validTo, null);
     }
 }

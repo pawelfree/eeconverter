@@ -26,6 +26,22 @@ public class EeIndirectParticipant {
         this.validFrom = validFrom;
         this.validTo = validTo;
     }
+
+    public String getParticipantNumber() {
+        return participantNumber;
+    }
+
+    public String getRepresentativeNumber() {
+        return representativeNumber;
+    }
+
+    public LocalDate getValidFrom() {
+        return validFrom;
+    }
+
+    public LocalDate getValidTo() {
+        return validTo;
+    }
     
     @Override
     public String toString() {

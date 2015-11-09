@@ -66,9 +66,9 @@ public class EEFiles {
         return false;
     }
 
-    public Stream<EachaParticipant> readEachaParticipants(String rrrrmmdd, String RRMMDD) {
+    public Stream<EachaParticipant> readEachaParticipants(String rrmmdd, String RRMMDD) {
         try {
-            return readFile(Paths.get("",subfolder,replaceDate(EachaParticipant.FILE_MASK, rrrrmmdd, RRMMDD)))
+            return readFile(Paths.get("",subfolder,replaceDate(EachaParticipant.FILE_MASK, rrmmdd, RRMMDD)))
                     .map(item -> EachaParticipant.getInstance(item));
         } catch (IOException ex) {
             Logger.getLogger(EEFiles.class.getName()).log(Level.SEVERE, null, ex);
