@@ -25,8 +25,6 @@ public class EEconverter {
             System.out.println("No files found");
         }
 
-        
-        System.setProperty("line.separator", "");
 //TODO replacements
 //TODO code reuse eefiles-read 
 //TODO REMEMBER w nowym elixirze beda inne zbiory i inne kodowanie znakow (UTF-8)
