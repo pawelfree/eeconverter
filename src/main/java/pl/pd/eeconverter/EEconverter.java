@@ -53,7 +53,7 @@ public class EEconverter {
         
         instance.writeFile("test.txt", dir.getLines());
 
-        dir.getLines().stream().forEach(System.out::println);
+        dir.getLines().stream().forEach(System.out::print);
     }
 
 }

@@ -51,6 +51,7 @@ public class SepaDirectory {
                 .concat(",")
                 .concat(item.getValidFrom())
                 .concat(",")
-                .concat(item.getValidTo());
+                .concat(item.getValidTo())
+                .concat(System.lineSeparator());
     }
 }
