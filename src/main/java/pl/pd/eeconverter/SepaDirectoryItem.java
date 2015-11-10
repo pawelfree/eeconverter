@@ -12,18 +12,14 @@ import java.util.Objects;
 public class SepaDirectoryItem {
 
     private final String bic;
-    private final String routingBic;
-    private final String settlementBic;
     private final String bankName;
     private final int source;
     private final LocalDate validFrom;
     private final LocalDate validTo;
     private final LocalTime cutoffTime;
 
-    public SepaDirectoryItem(String bic, String routingBic, String settlementBic, String bankName, int source, LocalDate validFrom, LocalDate validTo, LocalTime cutoffTime) {
+    public SepaDirectoryItem(String bic, String bankName, int source, LocalDate validFrom, LocalDate validTo, LocalTime cutoffTime) {
         this.bic = bic;
-        this.routingBic = routingBic;
-        this.settlementBic = settlementBic;
         this.bankName = bankName;
         this.source = source;
         this.validFrom = validFrom;
@@ -54,13 +50,5 @@ public class SepaDirectoryItem {
     public LocalTime getCutoffTime() {
         return cutoffTime;
     }
-   
-    public String getRoutingBic() {
-        return routingBic;
-    }
-
-    public String getSettlementBic() {
-        return settlementBic;
-    }    
-    
+       
 }

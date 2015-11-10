@@ -1,5 +1,6 @@
-package pl.pd.eeconverter.files;
+package pl.pd.eeconverter.euroelixir;
 
+import pl.pd.eeconverter.euroelixir.IEeParticipant;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
@@ -8,7 +9,7 @@ import java.util.Objects;
  *
  * @author paweldudek
  */
-public class EeIndirectParticipant {
+public class EeIndirectParticipant implements IEeParticipant {
     
     public static final String FILE_MASK = "OKrrrrmm.Xdd";
     
@@ -27,6 +28,7 @@ public class EeIndirectParticipant {
         this.validTo = validTo;
     }
 
+    @Override
     public String getParticipantNumber() {
         return participantNumber;
     }
@@ -35,10 +37,12 @@ public class EeIndirectParticipant {
         return representativeNumber;
     }
 
+    @Override
     public LocalDate getValidFrom() {
         return validFrom;
     }
 
+    @Override
     public LocalDate getValidTo() {
         return validTo;
     }

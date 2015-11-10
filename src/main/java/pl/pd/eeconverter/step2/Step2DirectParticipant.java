@@ -1,9 +1,10 @@
-package pl.pd.eeconverter.files;
+package pl.pd.eeconverter.step2;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import pl.pd.eeconverter.SepaDirectoryItem;
+import pl.pd.eeconverter.SourceId;
 
 /**
  *
@@ -61,6 +62,6 @@ public class Step2DirectParticipant {
     }
     
     public SepaDirectoryItem getDirectoryItem() {
-        return new SepaDirectoryItem(participantBic,participantBic,settlementBic, participantName,SourceId.SEPA_Direct.ordinal(), validFrom,validTo, null);
+        return new SepaDirectoryItem(participantBic, participantName,SourceId.SEPA_Direct.ordinal(), validFrom,validTo, null);
     }
 }

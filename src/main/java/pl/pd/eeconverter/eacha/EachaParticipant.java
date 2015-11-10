@@ -1,5 +1,6 @@
-package pl.pd.eeconverter.files;
+package pl.pd.eeconverter.eacha;
 
+import pl.pd.eeconverter.SourceId;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -67,6 +68,6 @@ public class EachaParticipant {
     }
 
     public SepaDirectoryItem getDirectoryItem() {
-        return new SepaDirectoryItem(participantBic, participantBic, participantBic, participantName, SourceId.EACHA.ordinal(), validFrom, validTo, null);
+        return new SepaDirectoryItem(participantBic, participantName, SourceId.EACHA.ordinal(), validFrom, validTo, null);
     }
 }

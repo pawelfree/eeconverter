@@ -1,4 +1,4 @@
-package pl.pd.eeconverter.files;
+package pl.pd.eeconverter;
 
 /**
  *

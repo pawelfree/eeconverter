@@ -1,4 +1,4 @@
-package pl.pd.eeconverter.files;
+package pl.pd.eeconverter.euroelixir;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

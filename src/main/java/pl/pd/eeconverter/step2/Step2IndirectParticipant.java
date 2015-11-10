@@ -1,9 +1,10 @@
-package pl.pd.eeconverter.files;
+package pl.pd.eeconverter.step2;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import pl.pd.eeconverter.SepaDirectoryItem;
+import pl.pd.eeconverter.SourceId;
 
 /**
  *
@@ -31,6 +32,10 @@ public class Step2IndirectParticipant {
         return validTo;
     }
 
+    public String getRepresentativeBic() {
+        return representativeBic;
+    }
+    
     private Step2IndirectParticipant(String participantBic, String participantName, LocalDate validFrom, LocalDate validTo,
             String representativeBic, String settlementBic, String status) {
         this.participantBic = participantBic;
@@ -66,7 +71,7 @@ public class Step2IndirectParticipant {
     }
     
     public SepaDirectoryItem getDirectoryItem() {
-        return new SepaDirectoryItem(participantBic, representativeBic, settlementBic, participantName, SourceId.SEPA_Indirect.ordinal(), validFrom,validTo, null);        
+        return new SepaDirectoryItem(participantBic, participantName, SourceId.SEPA_Indirect.ordinal(), validFrom,validTo, null);        
     }
     
 }

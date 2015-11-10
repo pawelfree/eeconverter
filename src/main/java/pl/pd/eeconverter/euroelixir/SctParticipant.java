@@ -1,13 +1,14 @@
-package pl.pd.eeconverter.files;
+package pl.pd.eeconverter.euroelixir;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.Optional;
 import java.util.stream.Stream;
 import pl.pd.eeconverter.SepaDirectoryItem;
+import pl.pd.eeconverter.SourceId;
 
 /**
  *
@@ -36,8 +37,6 @@ public class SctParticipant {
     public LocalDate getValidTo() {
         return validTo;
     }
-    
-    
 
     private SctParticipant(String participantBic, String participantNumber, LocalDate validFrom, LocalDate validTo,
             String mainBicIndicator, String sctIndicator) {
@@ -72,28 +71,23 @@ public class SctParticipant {
         );
     }
 
-    public List<SepaDirectoryItem> getDirectoryItem(Stream<EeDirectParticipant> directs, Stream<EeIndirectParticipant> indirects, Stream<EeReplacement> replacements) {
-        int sourceId;
+    private List<SepaDirectoryItem> getItems(Stream<? extends IEeParticipant> participants, int sourceId) {
         List<SepaDirectoryItem> list = new ArrayList<>();
 
-        List<EeDirectParticipant> di = directs.filter(item -> item.getParticipantNumber().equalsIgnoreCase(this.participantNumber)).collect(Collectors.toList());
-        sourceId = SourceId.KIR_Direct.ordinal();
-        for (EeDirectParticipant participant : di) {
-            List<Dates> dates = getValidityDates(new Dates(participant.getValidFrom(), participant.getValidTo()));
-            for (Dates date : dates) {
-                list.add(new SepaDirectoryItem(participantBic, participantBic, participantBic, "", sourceId, date.from, date.to, null));
-            }
-        }
+        participants.filter(item -> item.getParticipantNumber().equalsIgnoreCase(this.participantNumber))
+                .forEach(participant -> {
+                    getValidityDates(new Dates(participant.getValidFrom(), participant.getValidTo())).ifPresent(date
+                            -> list.add(new SepaDirectoryItem(participantBic, "", sourceId, date.from, date.to, null))
+                    );
+                });
+        return list;
+    }
 
-        List<EeIndirectParticipant> in = indirects.filter(item -> item.getParticipantNumber().equalsIgnoreCase(this.participantNumber)).collect(Collectors.toList());
-        sourceId = SourceId.KIR_Indirect.ordinal();
-        //TODO functional + code reuse above
-        for (EeIndirectParticipant participant : in) {
-            List<Dates> dates = getValidityDates(new Dates(participant.getValidFrom(), participant.getValidTo()));
-            for (Dates date : dates) {
-                list.add(new SepaDirectoryItem(participantBic, participantBic, participantBic, "", sourceId, date.from, date.to, null));
-            }
-        }
+    public List<SepaDirectoryItem> getDirectoryItem(Stream<? extends IEeParticipant> directs, Stream<? extends IEeParticipant> indirects, Stream<EeReplacement> replacements) {
+        List<SepaDirectoryItem> list = new ArrayList<>();
+
+        list.addAll(getItems(directs, SourceId.KIR_Direct.ordinal()));
+        list.addAll(getItems(indirects, SourceId.KIR_Indirect.ordinal()));
 
         return list;
     }
@@ -104,28 +98,28 @@ public class SctParticipant {
      * @param ee
      * @return
      */
-    private List<Dates> getValidityDates(Dates ee) {
-        List<Dates> dates = new ArrayList<>();
-
+    private Optional<Dates> getValidityDates(Dates ee) {
+        Optional<Dates> dates = Optional.empty();
         if (Objects.isNull(validTo) && Objects.isNull(ee.to)) {
             //1. sct_do==null & ee_do==null
             if (validFrom.isAfter(ee.from) || validFrom.isEqual(ee.from)) {
                 //1.1 sct_od >= ee_od => sct_od, null    
-                dates.add(new Dates(validFrom, null));
+                dates = Optional.of(new Dates(validFrom, null));
             } else {
                 //1.2 sct_od <  ee_od =>  ee_od, null
-                dates.add(new Dates(ee.from, null));
+                dates = Optional.of(new Dates(ee.from, null));
             }
             ////koniec 1
         } else if (Objects.nonNull(validTo) && Objects.isNull(ee.to)) {
             //2. sct_do!=null & ee_do==null
             if (validFrom.isAfter(ee.from) || validFrom.isEqual(ee.from)) {
                 //2.1 sct_od >= ee_od => sct_od ,sct_do
-                dates.add(new Dates(validFrom, validTo));
+                dates = Optional.of(new Dates(validFrom, validTo));
             } else //2.2 sct_od <  ee_od =>  
             {
                 if (validTo.isAfter(ee.from) || validTo.isEqual(ee.from)) {
                     //2.2.1               sct_do >= ee_od => ee_od, sct_do
+                    dates = Optional.of(new Dates(ee.from, validTo));
                 } else {
                     //2.2.2               sct_do <  ee_od => null, null
                     //do nothing
@@ -141,11 +135,11 @@ public class SctParticipant {
                     //do nothing
                 } else {
                     //3.1.2               sct_od <= ee_do => sct_od, ee_do
-                    dates.add(new Dates(validFrom, ee.to));
+                    dates = Optional.of(new Dates(validFrom, ee.to));
                 }
             } else {
                 //3.2 sct_od < ee_od => ee_od, ee_do
-                dates.add(new Dates(ee.from, ee.to));
+                dates = Optional.of(new Dates(ee.from, ee.to));
             }
             ////koniec 3
         } else if (Objects.nonNull(validTo) && Objects.nonNull(ee.to)) {
@@ -158,25 +152,24 @@ public class SctParticipant {
                 } else //4.1.2               sct_od <= ee_do
                  if (validTo.isAfter(ee.to) || validTo.isEqual(ee.to)) {
                         //4.1.2.1                           sct_do >= ee_do => sct_od, ee_do
-                        dates.add(new Dates(validFrom, ee.to));
+                        dates = Optional.of(new Dates(validFrom, ee.to));
                     } else {
                         //4.1.2.2                           sct_do <  ee_do => sct_od, sct_do
-                        dates.add(new Dates(validFrom, validTo));
+                        dates = Optional.of(new Dates(validFrom, validTo));
                     }
             } else //4.2 sct_od <  ee_od
-            {
-                if (validTo.isBefore(ee.from)) {
+             if (validTo.isBefore(ee.from)) {
                     //4.2.1               sct_do <  ee_od => null, null
                     //do nothing
                 } else //4.2.2               sct_do >= ee_od
-                if (validTo.isAfter(ee.to) || validTo.isEqual(ee.to)) {
-                    //4.2.2.1                           sct_do >= ee_do => ee_od, ee_do
-                    dates.add(new Dates(ee.from, ee.to));
-                } else {
-                    //4.2.2.2                           sct_do <  ee_do => ee_od, sct_do
-                    dates.add(new Dates(ee.from, validTo));
-                } ////koniec 4
-            }
+                 if (validTo.isAfter(ee.to) || validTo.isEqual(ee.to)) {
+                        //4.2.2.1                           sct_do >= ee_do => ee_od, ee_do
+                        dates = Optional.of(new Dates(ee.from, ee.to));
+                    } else {
+                        //4.2.2.2                           sct_do <  ee_do => ee_od, sct_do
+                        dates = Optional.of(new Dates(ee.from, validTo));
+                    }
+            ////koniec 4
         }
 
         return dates;
