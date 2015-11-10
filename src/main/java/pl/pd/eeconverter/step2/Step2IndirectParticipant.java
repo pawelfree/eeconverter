@@ -71,7 +71,7 @@ public class Step2IndirectParticipant {
     }
     
     public SepaDirectoryItem getDirectoryItem() {
-        return new SepaDirectoryItem(participantBic, participantName, SourceId.SEPA_Indirect.ordinal(), validFrom,validTo, null);        
+        return new SepaDirectoryItem(participantBic,representativeBic, "\"".concat(participantName).concat("\""), SourceId.SEPA_Indirect.ordinal(), validFrom,validTo, null);        
     }
     
 }

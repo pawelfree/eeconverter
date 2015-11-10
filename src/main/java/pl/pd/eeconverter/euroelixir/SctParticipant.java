@@ -77,7 +77,7 @@ public class SctParticipant {
         participants.filter(item -> item.getParticipantNumber().equalsIgnoreCase(this.participantNumber))
                 .forEach(participant -> {
                     getValidityDates(new Dates(participant.getValidFrom(), participant.getValidTo())).ifPresent(date
-                            -> list.add(new SepaDirectoryItem(participantBic, "Acme corp.", sourceId, date.from, date.to, null))
+                            -> list.add(new SepaDirectoryItem(participantBic, "", "\"Acme corp.\"", sourceId, date.from, date.to, null))
                     );
                 });
         return list;

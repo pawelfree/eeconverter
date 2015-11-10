@@ -45,6 +45,8 @@ public class SepaDirectory {
         }
         return "".concat(item.getBic())
                 .concat(",")
+                .concat(item.getRoutingBic())
+                .concat(",")
                 .concat(item.getBankName().trim())
                 .concat(",")
                 .concat(item.getSource())
@@ -52,6 +54,8 @@ public class SepaDirectory {
                 .concat(item.getValidFrom())
                 .concat(",")
                 .concat(item.getValidTo())
+                .concat(",")
+                .concat(item.getCutoffTime())
                 .concat(System.lineSeparator());
     }
 }

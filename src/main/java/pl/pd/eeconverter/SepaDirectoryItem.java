@@ -12,14 +12,16 @@ import java.util.Objects;
 public class SepaDirectoryItem {
 
     private final String bic;
+    private final String routingBic;
     private final String bankName;
     private final int source;
     private final LocalDate validFrom;
     private final LocalDate validTo;
     private final LocalTime cutoffTime;
 
-    public SepaDirectoryItem(String bic, String bankName, int source, LocalDate validFrom, LocalDate validTo, LocalTime cutoffTime) {
+    public SepaDirectoryItem(String bic, String routingBic, String bankName, int source, LocalDate validFrom, LocalDate validTo, LocalTime cutoffTime) {
         this.bic = bic;
+        this.routingBic = routingBic;
         this.bankName = bankName;
         this.source = source;
         this.validFrom = validFrom;
@@ -47,8 +49,12 @@ public class SepaDirectoryItem {
         return Objects.isNull(validTo) ? "" : validTo.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
     }
 
-    public LocalTime getCutoffTime() {
-        return cutoffTime;
+    public String getCutoffTime() {
+        return Objects.isNull(cutoffTime) ? "" : cutoffTime.format(DateTimeFormatter.ofPattern("hhmm"));
+    }
+    
+    public String getRoutingBic() {
+        return Objects.isNull(routingBic) ? "" : routingBic;
     }
        
 }
