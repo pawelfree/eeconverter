@@ -1,6 +1,5 @@
 package pl.pd.eeconverter.euroelixir;
 
-import pl.pd.eeconverter.euroelixir.IEeParticipant;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;

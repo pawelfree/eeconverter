@@ -19,6 +19,7 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
+import pl.pd.eeconverter.kir.Institution;
 
 /**
  *
@@ -168,6 +169,16 @@ public class EEFiles {
             Logger.getLogger(EEFiles.class.getName()).log(Level.SEVERE, null, ex);
         }
         return Stream.empty();
+    }
+    
+    public Stream<Institution>readInstitutions(String rrrrmmdd) {
+        try {
+            return readFile(Paths.get("",subfolder,replaceDate(Institution.FILE_MASK, rrrrmmdd)))
+                    .map(item -> Institution.getInstance(item));
+        } catch (IOException ex) {
+            Logger.getLogger(EEFiles.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return Stream.empty();        
     }
     
     private Stream<String> readFile(Path path) throws IOException {

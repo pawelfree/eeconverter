@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 import pl.pd.eeconverter.SepaDirectoryItem;
 import pl.pd.eeconverter.SourceId;
+import pl.pd.eeconverter.kir.Institution;
 
 /**
  *
@@ -71,23 +72,29 @@ public class SctParticipant {
         );
     }
 
-    private List<SepaDirectoryItem> getItems(Stream<? extends IEeParticipant> participants, int sourceId) {
+    private List<SepaDirectoryItem> getItems(Stream<? extends IEeParticipant> participants, int sourceId, List<Institution> institutions) {
         List<SepaDirectoryItem> list = new ArrayList<>();
 
         participants.filter(item -> item.getParticipantNumber().equalsIgnoreCase(this.participantNumber))
                 .forEach(participant -> {
+                    String name = institutions.stream()
+                            .filter(item -> item.getInstitutionNumber().equalsIgnoreCase(participant.getParticipantNumber().substring(0, 3)))
+                            .findAny()
+                            .map(i -> i.getInstitutionName())
+                            .orElse("");
                     getValidityDates(new Dates(participant.getValidFrom(), participant.getValidTo())).ifPresent(date
-                            -> list.add(new SepaDirectoryItem(participantBic, "", "\"Acme corp.\"", sourceId, date.from, date.to, null))
+                            -> list.add(new SepaDirectoryItem(participantBic, "", "\"".concat(name).concat("\""), sourceId, date.from, date.to, null))
                     );
                 });
         return list;
     }
 
-    public List<SepaDirectoryItem> getDirectoryItem(Stream<? extends IEeParticipant> directs, Stream<? extends IEeParticipant> indirects, Stream<EeReplacement> replacements) {
+    public List<SepaDirectoryItem> getDirectoryItem(Stream<? extends IEeParticipant> directs, Stream<? extends IEeParticipant> indirects,
+            Stream<EeReplacement> replacements, List<Institution> institutions) {
         List<SepaDirectoryItem> list = new ArrayList<>();
 
-        list.addAll(getItems(directs, SourceId.KIR_Direct.ordinal()));
-        list.addAll(getItems(indirects, SourceId.KIR_Indirect.ordinal()));
+        list.addAll(getItems(directs, SourceId.KIR_Direct.ordinal(), institutions));
+        list.addAll(getItems(indirects, SourceId.KIR_Indirect.ordinal(), institutions));
 
         return list;
     }
@@ -116,15 +123,13 @@ public class SctParticipant {
                 //2.1 sct_od >= ee_od => sct_od ,sct_do
                 dates = Optional.of(new Dates(validFrom, validTo));
             } else //2.2 sct_od <  ee_od =>  
-            {
-                if (validTo.isAfter(ee.from) || validTo.isEqual(ee.from)) {
+             if (validTo.isAfter(ee.from) || validTo.isEqual(ee.from)) {
                     //2.2.1               sct_do >= ee_od => ee_od, sct_do
                     dates = Optional.of(new Dates(ee.from, validTo));
                 } else {
                     //2.2.2               sct_do <  ee_od => null, null
                     //do nothing
                 }
-            }
             ////koniec 2
         } else if (Objects.isNull(validTo) && Objects.nonNull(ee.to)) {
             //3. sct_do==null & ee_do!=null
@@ -150,25 +155,31 @@ public class SctParticipant {
                     //4.1.1               sct_od >  ee_do => null, null
                     //do nothing
                 } else //4.1.2               sct_od <= ee_do
-                 if (validTo.isAfter(ee.to) || validTo.isEqual(ee.to)) {
+                {
+                    if (validTo.isAfter(ee.to) || validTo.isEqual(ee.to)) {
                         //4.1.2.1                           sct_do >= ee_do => sct_od, ee_do
                         dates = Optional.of(new Dates(validFrom, ee.to));
                     } else {
                         //4.1.2.2                           sct_do <  ee_do => sct_od, sct_do
                         dates = Optional.of(new Dates(validFrom, validTo));
                     }
+                }
             } else //4.2 sct_od <  ee_od
-             if (validTo.isBefore(ee.from)) {
+            {
+                if (validTo.isBefore(ee.from)) {
                     //4.2.1               sct_do <  ee_od => null, null
                     //do nothing
                 } else //4.2.2               sct_do >= ee_od
-                 if (validTo.isAfter(ee.to) || validTo.isEqual(ee.to)) {
+                {
+                    if (validTo.isAfter(ee.to) || validTo.isEqual(ee.to)) {
                         //4.2.2.1                           sct_do >= ee_do => ee_od, ee_do
                         dates = Optional.of(new Dates(ee.from, ee.to));
                     } else {
                         //4.2.2.2                           sct_do <  ee_do => ee_od, sct_do
                         dates = Optional.of(new Dates(ee.from, validTo));
                     }
+                }
+            }
             ////koniec 4
         }
 

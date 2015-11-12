@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import pl.pd.eeconverter.euroelixir.EeReplacement;
 import pl.pd.eeconverter.euroelixir.IEeParticipant;
+import pl.pd.eeconverter.kir.Institution;
 
 /**
  *
@@ -34,22 +35,25 @@ public class EEconverter {
         List<IEeParticipant> directs = instance.readDirectParticipants("20151015").collect(Collectors.toList());
         List<IEeParticipant> indirects = instance.readIndirectParticipants("20151015").collect(Collectors.toList());
         List<EeReplacement> replacements = instance.readReplacements("20151015").collect(Collectors.toList());
+        List<Institution> institutions = instance.readInstitutions("20151015").collect(Collectors.toList());
+        
 
         SepaDirectory dir = new SepaDirectory();
 
         instance.readSctParticipants("20151015")
-                .forEach(item -> dir.addAll(item.getDirectoryItem(directs.stream(), indirects.stream(), replacements.stream())));
+                .forEach(item -> dir.addAll(item.getDirectoryItem(directs.stream(), indirects.stream(),
+                        replacements.stream(), institutions)));
 
-        instance.readEachaParticipants("151109", "151115")
-                .forEach(item -> dir.add(item.getDirectoryItem()));
-
-        instance.readDirectStep2Participants("20151015")
-                .forEach(item -> dir.add(item.getDirectoryItem()));
-        
-        instance.readIndirectStep2Participants("20151015")
-                .forEach(item -> dir.add(item.getDirectoryItem()));
-        
-        instance.writeFile("test.txt", dir.getLines());
+//        instance.readEachaParticipants("151109", "151115")
+//                .forEach(item -> dir.add(item.getDirectoryItem()));
+//
+//        instance.readDirectStep2Participants("20151015")
+//                .forEach(item -> dir.add(item.getDirectoryItem()));
+//        
+//        instance.readIndirectStep2Participants("20151015")
+//                .forEach(item -> dir.add(item.getDirectoryItem()));
+//        
+//        instance.writeFile("test.txt", dir.getLines());
 
         dir.getLines().stream().forEach(System.out::print);
     }
