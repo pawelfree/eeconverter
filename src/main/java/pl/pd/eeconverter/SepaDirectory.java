@@ -59,7 +59,7 @@ public class SepaDirectory {
                 .concat(",")
                 .concat(item.getValidTo())
                 .concat(",")
-                .concat(item.getCutoffTime());
-                //.concat(System.lineSeparator());
+                .concat(item.getCutoffTime())
+                ;//.concat(System.lineSeparator());
     }
 }

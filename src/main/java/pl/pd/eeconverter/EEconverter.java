@@ -42,19 +42,18 @@ public class EEconverter {
 //TODO REMEMBER w nowym elixirze beda inne zbiory i inne kodowanie znakow (UTF-8)
 
 //        instance.readParticipants("20151015").forEach(System.out::println);        
-//        instance.readSctParticipants("20151015").forEach(System.out::println); 
+//        instance.readSctParticipants(DATE_EURO_ELIXIR).forEach(System.out::println); 
+
         List<IEeParticipant> directs = instance.readDirectParticipants(DATE_EURO_ELIXIR).collect(Collectors.toList());
         List<IEeParticipant> indirects = instance.readIndirectParticipants(DATE_EURO_ELIXIR).collect(Collectors.toList());
         List<EeReplacement> replacements = instance.readReplacements(DATE_EURO_ELIXIR).collect(Collectors.toList());
         List<Institution> institutions = instance.readInstitutions(DATE_EURO_ELIXIR).collect(Collectors.toList());
         
-
         SepaDirectory dir = new SepaDirectory();
 
         instance.readEachaParticipants(DATE_EACHA)
                 .forEach(item -> dir.add(item.getDirectoryItem()));
         instance.writeFile("EA".concat(DATE_EACHA).concat(".txt"), dir.getLines());
-
 
         dir.clear();
                 

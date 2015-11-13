@@ -64,7 +64,7 @@ public class Step2IndirectParticipant {
                 line.substring(11,61).trim(),
                 LocalDate.parse(line.subSequence(61, 69), DateTimeFormatter.ofPattern("yyyyMMdd")),
                 line.substring(69, 77).trim().isEmpty() ? null : LocalDate.parse(line.substring(69, 77), DateTimeFormatter.ofPattern("yyyyMMdd")),
-                line.substring(77,85).trim(),
+                line.substring(77,85).trim().length() == 8 ? line.substring(77,85).trim().concat("XXX") : line.substring(77,85).trim(),
                 line.substring(85,96).trim(),
                 line.substring(96,97)
         );
