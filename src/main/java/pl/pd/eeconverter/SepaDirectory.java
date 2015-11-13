@@ -32,6 +32,10 @@ public class SepaDirectory {
     public void addAll(List<SepaDirectoryItem> items) {
         this.items.addAll(items);
     }
+    
+    public void clear() {
+        this.items.clear();
+    }
 
     public List<String> getLines() {
         return items.stream()
@@ -55,7 +59,7 @@ public class SepaDirectory {
                 .concat(",")
                 .concat(item.getValidTo())
                 .concat(",")
-                .concat(item.getCutoffTime())
-                .concat(System.lineSeparator());
+                .concat(item.getCutoffTime());
+                //.concat(System.lineSeparator());
     }
 }

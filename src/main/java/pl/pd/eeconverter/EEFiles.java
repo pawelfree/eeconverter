@@ -31,7 +31,7 @@ public class EEFiles {
     
     private static final String NBP_BIC = "NBPLPLPW";
     
-    private static final int NUMBER_OF_REQUIRED_FILES = 7;
+    private static final int NUMBER_OF_REQUIRED_FILES = 8;
 
     private String subfolder = "";
     
@@ -58,8 +58,8 @@ public class EEFiles {
 
         Logger.getLogger(EEFiles.class.getName()).log(Level.INFO, "Current relative path is: ".concat(path.toAbsolutePath().toString()));
         
-        final String regex = replaceDate(".*[B|O|C][U|K|Z|T|O]rrrrmm.[X]dd", rrrrmmdd);
-
+        final String regex = replaceDate(".*[B|O|C][U|K|Z|T|O|A]rrrrmm.[X|0]dd", rrrrmmdd);
+        
         try {
             return Files.list(Paths.get(path.toString(),subfolder))
                         .filter(name -> name.toString().matches(regex))
@@ -70,9 +70,9 @@ public class EEFiles {
         return false;
     }
 
-    public Stream<EachaParticipant> readEachaParticipants(String rrmmdd, String RRMMDD) {
+    public Stream<EachaParticipant> readEachaParticipants(String eachaDates) {
         try {
-            return readFile(Paths.get("",subfolder,replaceDate(EachaParticipant.FILE_MASK, rrmmdd, RRMMDD)))
+            return readFile(Paths.get("",subfolder,replaceDate(EachaParticipant.FILE_MASK, eachaDates.substring(0,6), eachaDates.substring(6, 12))))
                     .map(item -> EachaParticipant.getInstance(item))
                     .filter(participant -> Objects.isNull(participant.getValidTo()) ? true : !participant.getValidTo().isBefore(LocalDate.now()));
         } catch (IOException ex) {

@@ -24,7 +24,7 @@ public class SepaDirectoryItem {
         this.routingBic = routingBic;
         this.bankName = bankName;
         this.source = source;
-        this.validFrom = validFrom;
+        this.validFrom = validFrom; 
         this.validTo = validTo;
         this.cutoffTime = cutoffTime;
     }
