@@ -3,6 +3,7 @@ package pl.pd.eeconverter.step2;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
+import pl.pd.eeconverter.Constants;
 import pl.pd.eeconverter.SepaDirectoryItem;
 import pl.pd.eeconverter.SourceId;
 
@@ -62,8 +63,8 @@ public class Step2IndirectParticipant {
     public static Step2IndirectParticipant getInstance(String line) {
         return new Step2IndirectParticipant(line.substring(0, 11).trim(),
                 line.substring(11,61).trim(),
-                LocalDate.parse(line.subSequence(61, 69), DateTimeFormatter.ofPattern("yyyyMMdd")),
-                line.substring(69, 77).trim().isEmpty() ? null : LocalDate.parse(line.substring(69, 77), DateTimeFormatter.ofPattern("yyyyMMdd")),
+                LocalDate.parse(line.subSequence(61, 69), DateTimeFormatter.ofPattern(Constants.OF_DATE)),
+                line.substring(69, 77).trim().isEmpty() ? null : LocalDate.parse(line.substring(69, 77), DateTimeFormatter.ofPattern(Constants.OF_DATE)),
                 line.substring(77,85).trim().length() == 8 ? line.substring(77,85).trim().concat("XXX") : line.substring(77,85).trim(),
                 line.substring(85,96).trim(),
                 line.substring(96,97)

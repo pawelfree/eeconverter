@@ -3,6 +3,7 @@ package pl.pd.eeconverter.euroelixir;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
+import pl.pd.eeconverter.Constants;
 
 /**
  * Stores information about participant of EE system
@@ -44,8 +45,8 @@ public class EeParticipant {
     public static EeParticipant getInstance(String line) {
 
         return new EeParticipant(line.substring(0, 3),
-                LocalDate.parse(line.subSequence(3,11), DateTimeFormatter.ofPattern("yyyyMMdd")),
-                line.substring(11, 19).trim().isEmpty() ? null : LocalDate.parse(line.substring(11,19), DateTimeFormatter.ofPattern("yyyyMMdd")),
+                LocalDate.parse(line.subSequence(3,11), DateTimeFormatter.ofPattern(Constants.OF_DATE)),
+                line.substring(11, 19).trim().isEmpty() ? null : LocalDate.parse(line.substring(11,19), DateTimeFormatter.ofPattern(Constants.OF_DATE)),
                 line.substring(21,29));
     }
 

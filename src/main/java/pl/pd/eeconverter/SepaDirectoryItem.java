@@ -42,15 +42,15 @@ public class SepaDirectoryItem {
     }
 
     public String getValidFrom() {
-        return validFrom.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        return validFrom.format(DateTimeFormatter.ofPattern(Constants.DATE_FORMAT));
     }
 
     public String getValidTo() {
-        return Objects.isNull(validTo) ? "" : validTo.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        return Objects.isNull(validTo) ? "" : validTo.format(DateTimeFormatter.ofPattern(Constants.DATE_FORMAT));
     }
 
     public String getCutoffTime() {
-        return Objects.isNull(cutoffTime) ? "" : cutoffTime.format(DateTimeFormatter.ofPattern("hhmm"));
+        return Objects.isNull(cutoffTime) ? "" : cutoffTime.format(DateTimeFormatter.ofPattern(Constants.HOUR_FORMAT));
     }
     
     public String getRoutingBic() {

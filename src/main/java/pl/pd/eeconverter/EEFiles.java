@@ -76,7 +76,7 @@ public class EEFiles {
                     .map(item -> EachaParticipant.getInstance(item))
                     .filter(participant -> Objects.isNull(participant.getValidTo()) ? true : !participant.getValidTo().isBefore(LocalDate.now()));
         } catch (IOException ex) {
-            Logger.getLogger(EEFiles.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         return Stream.empty();
     }
@@ -87,7 +87,7 @@ public class EEFiles {
                     .map(item -> Step2DirectParticipant.getInstance(item))
                     .filter(participant -> Objects.isNull(participant.getValidTo()) ? true : !participant.getValidTo().isBefore(LocalDate.now()));
         } catch (IOException ex) {
-            Logger.getLogger(EEFiles.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         return Stream.empty();
     }
@@ -105,7 +105,7 @@ public class EEFiles {
                     .filter(participant -> Objects.isNull(participant.getValidTo()) ? true : !participant.getValidTo().isBefore(LocalDate.now()))
                     .filter(participant -> !participant.getRepresentativeBic().contains(NBP_BIC));
         } catch (IOException ex) {
-            Logger.getLogger(EEFiles.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         return Stream.empty();
     }    
@@ -123,7 +123,7 @@ public class EEFiles {
                     .filter(item -> item.getSctIndicator() > 0)
                     .filter(participant -> Objects.isNull(participant.getValidTo()) ? true : !participant.getValidTo().isBefore(LocalDate.now()));            
         } catch (IOException ex) {
-            Logger.getLogger(EEFiles.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         return Stream.empty();
     }    
@@ -133,7 +133,7 @@ public class EEFiles {
             return readFile(Paths.get("",subfolder,replaceDate(EeReplacement.FILE_MASK, rrrrmmdd)))
                     .map(item -> EeReplacement.getInstance(item));
         } catch (IOException ex) {
-            Logger.getLogger(EEFiles.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         return Stream.empty();
     }
@@ -144,7 +144,7 @@ public class EEFiles {
                     .map(item -> EeParticipant.getInstance(item))
                     .filter(participant -> Objects.isNull(participant.getValidTo()) ? true : !participant.getValidTo().isBefore(LocalDate.now()));
         } catch (IOException ex) {
-            Logger.getLogger(EEFiles.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         return Stream.empty();
     }
@@ -155,7 +155,7 @@ public class EEFiles {
                     .map(item -> EeDirectParticipant.getInstance(item))
                     .filter(participant -> Objects.isNull(participant.getValidTo()) ? true : !participant.getValidTo().isBefore(LocalDate.now()));
         } catch (IOException ex) {
-            Logger.getLogger(EEFiles.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         return Stream.empty();
     }
@@ -166,7 +166,7 @@ public class EEFiles {
                     .map(item -> EeIndirectParticipant.getInstance(item))
                     .filter(participant -> Objects.isNull(participant.getValidTo()) ? true : !participant.getValidTo().isBefore(LocalDate.now()));
         } catch (IOException ex) {
-            Logger.getLogger(EEFiles.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         return Stream.empty();
     }
@@ -176,7 +176,7 @@ public class EEFiles {
             return readFile(Paths.get("",subfolder,replaceDate(Institution.FILE_MASK, rrrrmmdd)))
                     .map(item -> Institution.getInstance(item));
         } catch (IOException ex) {
-            Logger.getLogger(EEFiles.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         return Stream.empty();        
     }
@@ -198,7 +198,7 @@ public class EEFiles {
         try {
             Files.write(Paths.get("",filename), list);
         } catch (IOException ex) {
-            Logger.getLogger(EEconverter.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }        
     }
 }

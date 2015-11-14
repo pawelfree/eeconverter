@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
+import pl.pd.eeconverter.Constants;
 import pl.pd.eeconverter.SepaDirectoryItem;
 import pl.pd.eeconverter.SourceId;
 import pl.pd.eeconverter.kir.Institution;
@@ -65,8 +66,8 @@ public class SctParticipant {
         return new SctParticipant(
                 line.substring(0, 11),
                 line.substring(11, 19),
-                LocalDate.parse(line.subSequence(19, 27), DateTimeFormatter.ofPattern("yyyyMMdd")),
-                line.substring(27, 35).trim().isEmpty() ? null : LocalDate.parse(line.substring(27, 35), DateTimeFormatter.ofPattern("yyyyMMdd")),
+                LocalDate.parse(line.subSequence(19, 27), DateTimeFormatter.ofPattern(Constants.OF_DATE)),
+                line.substring(27, 35).trim().isEmpty() ? null : LocalDate.parse(line.substring(27, 35), DateTimeFormatter.ofPattern(Constants.OF_DATE)),
                 line.substring(35, 36),
                 line.substring(36, 37)
         );

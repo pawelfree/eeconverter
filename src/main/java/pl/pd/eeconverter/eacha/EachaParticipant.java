@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
+import pl.pd.eeconverter.Constants;
 import pl.pd.eeconverter.SepaDirectoryItem;
 
 /**
@@ -59,8 +60,8 @@ public class EachaParticipant {
     public static EachaParticipant getInstance(String line) {
         return new EachaParticipant(line.substring(0, 11).trim(),
                 line.substring(11, 151).trim(),
-                LocalDate.parse(line.subSequence(151, 159), DateTimeFormatter.ofPattern("yyyyMMdd")),
-                line.substring(159, 167).trim().isEmpty() ? null : LocalDate.parse(line.substring(159, 167), DateTimeFormatter.ofPattern("yyyyMMdd")),
+                LocalDate.parse(line.subSequence(151, 159), DateTimeFormatter.ofPattern(Constants.OF_DATE)),
+                line.substring(159, 167).trim().isEmpty() ? null : LocalDate.parse(line.substring(159, 167), DateTimeFormatter.ofPattern(Constants.OF_DATE)),
                 line.substring(167, 171).trim().isEmpty() ? null : LocalTime.parse(line.substring(167, 171), DateTimeFormatter.ofPattern("HHmm")),
                 line.substring(171, 172),
                 line.substring(172, 180)

@@ -3,6 +3,7 @@ package pl.pd.eeconverter.euroelixir;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
+import pl.pd.eeconverter.Constants;
 
 /**
  *
@@ -59,7 +60,7 @@ public class EeIndirectParticipant implements IEeParticipant {
 
         return new EeIndirectParticipant(line.substring(0, 8),
                 line.substring(8,16),
-                LocalDate.parse(line.subSequence(16,24), DateTimeFormatter.ofPattern("yyyyMMdd")),
-                line.substring(24, 32).trim().isEmpty() ? null : LocalDate.parse(line.substring(24,32), DateTimeFormatter.ofPattern("yyyyMMdd")));
+                LocalDate.parse(line.subSequence(16,24), DateTimeFormatter.ofPattern(Constants.OF_DATE)),
+                line.substring(24, 32).trim().isEmpty() ? null : LocalDate.parse(line.substring(24,32), DateTimeFormatter.ofPattern(Constants.OF_DATE)));
     }
 }
