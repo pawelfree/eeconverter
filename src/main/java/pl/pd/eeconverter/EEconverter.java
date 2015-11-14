@@ -47,6 +47,19 @@ public class EEconverter {
                 .forEach(item -> dir.add(item.getDirectoryItem()));
         instance.writeFile("EA".concat(Constants.DATE_EACHA).concat(".txt"), dir.getLines());
 
+        dir.clear();
+                
+        instance.readSctParticipants(Constants.DATE_EURO_ELIXIR)
+                .forEach(item -> dir.addAll(item.getDirectoryItem(directs.stream(), indirects.stream(),
+                        replacements.stream(), institutions)));
+
+        instance.readDirectStep2Participants(Constants.DATE_EURO_ELIXIR)
+                .forEach(item -> dir.add(item.getDirectoryItem()));
+        
+        instance.readIndirectStep2Participants(Constants.DATE_EURO_ELIXIR)
+                .forEach(item -> dir.add(item.getDirectoryItem()));
+        
+        instance.writeFile("ZB".concat(Constants.DATE_EURO_ELIXIR).concat(".txt"), dir.getLines());
 
         dir.getLines().stream().forEach(System.out::print);
     }
