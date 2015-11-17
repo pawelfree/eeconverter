@@ -47,19 +47,20 @@ public class SepaDirectory {
         if (Objects.isNull(item)) {
             return "";
         }
-        return "".concat(item.getBic())
-                .concat(",")
+        return "\"".concat(item.getBic())
+                .concat("\",\"")
                 .concat(item.getRoutingBic())
-                .concat(",")
+                .concat("\",\"")
                 .concat(item.getBankName().trim())
-                .concat(",")
+                .concat("\",\"")
                 .concat(item.getSource())
-                .concat(",")
+                .concat("\",\"")
                 .concat(item.getValidFrom())
-                .concat(",")
+                .concat("\",\"")
                 .concat(item.getValidTo())
-                .concat(",")
+                .concat("\",\"")
                 .concat(item.getCutoffTime())
+                .concat("\"")
                 ;//.concat(System.lineSeparator());
     }
 }

@@ -84,7 +84,7 @@ public class SctParticipant {
                             .map(i -> i.getInstitutionName())
                             .orElse("");
                     getValidityDates(new Dates(participant.getValidFrom(), participant.getValidTo())).ifPresent(date
-                            -> list.add(new SepaDirectoryItem(participantBic, "", "\"".concat(name).concat("\""), sourceId, date.from, date.to, null))
+                            -> list.add(new SepaDirectoryItem(participantBic, "", name, sourceId, date.from, date.to, null))
                     );
                 });
         return list;

@@ -69,6 +69,6 @@ public class EachaParticipant {
     }
 
     public SepaDirectoryItem getDirectoryItem() {
-        return new SepaDirectoryItem(participantBic, "", "\"".concat(participantName).concat("\""), SourceId.EACHA.ordinal(), validFrom, validTo, cutoffHour);
+        return new SepaDirectoryItem(participantBic, "", participantName, SourceId.EACHA.ordinal(), validFrom, validTo, cutoffHour);
     }
 }
