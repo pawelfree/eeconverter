@@ -14,6 +14,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -26,21 +28,21 @@ import pl.pd.eeconverter.kir.Institution;
  * @author paweldudek
  */
 public class EEFiles {
-    
+
     private static final Logger LOGGER = Logger.getLogger(EEFiles.class.getCanonicalName());
-    
+
     private static final String NBP_BIC = "NBPLPLPW";
-    
+
     private static final int NUMBER_OF_REQUIRED_FILES = 8;
 
     private String subfolder = "";
-    
+
     private static EEFiles instance;
-    
+
     private EEFiles() {
-        
+
     }
-   
+
     public static EEFiles getInstance() {
         if (null == instance) {
             return new EEFiles();
@@ -48,157 +50,120 @@ public class EEFiles {
             return instance;
         }
     }
-    
+
     public void setSubfolder(String subfolder) {
         this.subfolder = subfolder;
     }
-    
-    //TODO nie weryfikuje pliku EArrmmddRRMMDD
-    public boolean verifyFilesExist(Path path, String rrrrmmdd) {
 
-        Logger.getLogger(EEFiles.class.getName()).log(Level.INFO, "Current relative path is: ".concat(path.toAbsolutePath().toString()));
-        
-        final String regex = replaceDate(".*[B|O|C][U|K|Z|T|O|A]rrrrmm.[X|0]dd", rrrrmmdd);
-        
-        try {
-            return Files.list(Paths.get(path.toString(),subfolder))
-                        .filter(name -> name.toString().matches(regex))
-                        .count() == NUMBER_OF_REQUIRED_FILES;
-        } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, null, ex);
-        }
-        return false;
+    public boolean verifyParams(String param1, String param2) {
+        String regex = "[0-9]{2}((0[1-9])|(1[0-2]))([0-2]\\d|(3[0|1]))";
+
+        return Objects.nonNull(param1)
+                && Objects.nonNull(param2)
+                && param1.matches("^20".concat(regex).concat("$"))
+                && param2.matches("^".concat(regex).concat(regex).concat("$"));
     }
 
-    public Stream<EachaParticipant> readEachaParticipants(String eachaDates) {
-        try {
-            return readFile(Paths.get("",subfolder,replaceDate(EachaParticipant.FILE_MASK, eachaDates.substring(0,6), eachaDates.substring(6, 12))))
-                    .map(item -> EachaParticipant.getInstance(item))
-                    .filter(participant -> Objects.isNull(participant.getValidTo()) ? true : !participant.getValidTo().isBefore(LocalDate.now()));
-        } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, null, ex);
-        }
-        return Stream.empty();
+    public boolean verifyFilesExist() {
+
+        Path path = Constants.INPUT_FOLDER.isEmpty() ? Paths.get("") : Paths.get("", Constants.INPUT_FOLDER);
+
+        List<String> lst = new ArrayList<>(Arrays.asList(
+                replaceDate(EachaParticipant.FILE_MASK, Constants.DATE_EACHA.substring(0, 6), Constants.DATE_EACHA.substring(6, 12)),
+                replaceDate(Step2DirectParticipant.FILE_MASK, Constants.DATE_EURO_ELIXIR),
+                replaceDate(Step2IndirectParticipant.FILE_MASK, Constants.DATE_EURO_ELIXIR),
+                replaceDate(SctParticipant.FILE_MASK, Constants.DATE_EURO_ELIXIR),
+                replaceDate(EeParticipant.FILE_MASK, Constants.DATE_EURO_ELIXIR),
+                replaceDate(EeIndirectParticipant.FILE_MASK, Constants.DATE_EURO_ELIXIR),
+                replaceDate(EeDirectParticipant.FILE_MASK, Constants.DATE_EURO_ELIXIR),
+                replaceDate(Institution.FILE_MASK, Constants.DATE_EURO_ELIXIR)));
+
+        return lst.stream().allMatch(item -> Files.exists(Paths.get(path.toString(), item)));
     }
-    
-    public Stream<Step2DirectParticipant> readDirectStep2Participants(String rrrrmmdd) {
-        try {
-            return readFile(Paths.get("",subfolder,replaceDate(Step2DirectParticipant.FILE_MASK, rrrrmmdd)))
-                    .map(item -> Step2DirectParticipant.getInstance(item))
-                    .filter(participant -> Objects.isNull(participant.getValidTo()) ? true : !participant.getValidTo().isBefore(LocalDate.now()));
-        } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, null, ex);
-        }
-        return Stream.empty();
+
+    public Stream<EachaParticipant> readEachaParticipants() throws IOException {
+        return readFile(Paths.get("", subfolder, replaceDate(EachaParticipant.FILE_MASK, Constants.DATE_EACHA.substring(0, 6), Constants.DATE_EACHA.substring(6, 12))))
+                .map(item -> EachaParticipant.getInstance(item))
+                .filter(participant -> Objects.isNull(participant.getValidTo()) ? true : !participant.getValidTo().isBefore(LocalDate.now()));
+    }
+
+    public Stream<Step2DirectParticipant> readDirectStep2Participants() throws IOException {
+        return readFile(Paths.get("", subfolder, replaceDate(Step2DirectParticipant.FILE_MASK, Constants.DATE_EURO_ELIXIR)))
+                .map(item -> Step2DirectParticipant.getInstance(item))
+                .filter(participant -> Objects.isNull(participant.getValidTo()) ? true : !participant.getValidTo().isBefore(LocalDate.now()));
     }
 
     /**
      * Excluded banks for which representative BIC is NBPLPLPW
-     * 
+     *
      * @param rrrrmmdd
-     * @return 
+     * @return
      */
-    public Stream<Step2IndirectParticipant> readIndirectStep2Participants(String rrrrmmdd) {
-        try {
-            return readFile(Paths.get("",subfolder,replaceDate(Step2IndirectParticipant.FILE_MASK, rrrrmmdd)))
-                    .map(item -> Step2IndirectParticipant.getInstance(item))
-                    .filter(participant -> Objects.isNull(participant.getValidTo()) ? true : !participant.getValidTo().isBefore(LocalDate.now()))
-                    .filter(participant -> !participant.getRepresentativeBic().contains(NBP_BIC));
-        } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, null, ex);
-        }
-        return Stream.empty();
-    }    
-    
-    /**
-     * Returns stream of SCT Participants file for which SCT flag is  > 0
-     * 
-     * @param rrrrmmdd
-     * @return 
-     */
-    public Stream<SctParticipant> readSctParticipants(String rrrrmmdd) {
-        try {
-            return readFile(Paths.get("",subfolder,replaceDate(SctParticipant.FILE_MASK, rrrrmmdd)))
-                    .map(item -> SctParticipant.getInstance(item))
-                    .filter(item -> item.getSctIndicator() > 0)
-                    .filter(participant -> Objects.isNull(participant.getValidTo()) ? true : !participant.getValidTo().isBefore(LocalDate.now()));            
-        } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, null, ex);
-        }
-        return Stream.empty();
-    }    
-    
-    public Stream<EeReplacement> readReplacements(String rrrrmmdd) {
-        try {
-            return readFile(Paths.get("",subfolder,replaceDate(EeReplacement.FILE_MASK, rrrrmmdd)))
-                    .map(item -> EeReplacement.getInstance(item));
-        } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, null, ex);
-        }
-        return Stream.empty();
-    }
-        
-    public Stream<EeParticipant> readParticipants(String rrrrmmdd) {
-        try {
-            return readFile(Paths.get("",subfolder,replaceDate(EeParticipant.FILE_MASK, rrrrmmdd)))
-                    .map(item -> EeParticipant.getInstance(item))
-                    .filter(participant -> Objects.isNull(participant.getValidTo()) ? true : !participant.getValidTo().isBefore(LocalDate.now()));
-        } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, null, ex);
-        }
-        return Stream.empty();
-    }
-        
-    public Stream<EeDirectParticipant> readDirectParticipants(String rrrrmmdd) {
-        try {
-            return readFile(Paths.get("",subfolder,replaceDate(EeDirectParticipant.FILE_MASK, rrrrmmdd)))
-                    .map(item -> EeDirectParticipant.getInstance(item))
-                    .filter(participant -> Objects.isNull(participant.getValidTo()) ? true : !participant.getValidTo().isBefore(LocalDate.now()));
-        } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, null, ex);
-        }
-        return Stream.empty();
+    public Stream<Step2IndirectParticipant> readIndirectStep2Participants() throws IOException {
+        return readFile(Paths.get("", subfolder, replaceDate(Step2IndirectParticipant.FILE_MASK, Constants.DATE_EURO_ELIXIR)))
+                .map(item -> Step2IndirectParticipant.getInstance(item))
+                .filter(participant -> Objects.isNull(participant.getValidTo()) ? true : !participant.getValidTo().isBefore(LocalDate.now()))
+                .filter(participant -> !participant.getRepresentativeBic().contains(NBP_BIC));
     }
 
-    public Stream<EeIndirectParticipant> readIndirectParticipants(String rrrrmmdd) {
-        try {
-            return readFile(Paths.get("",subfolder,replaceDate(EeIndirectParticipant.FILE_MASK, rrrrmmdd)))
-                    .map(item -> EeIndirectParticipant.getInstance(item))
-                    .filter(participant -> Objects.isNull(participant.getValidTo()) ? true : !participant.getValidTo().isBefore(LocalDate.now()));
-        } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, null, ex);
-        }
-        return Stream.empty();
+    /**
+     * Returns stream of SCT Participants file for which SCT flag is > 0
+     *
+     * @return
+     */
+    public Stream<SctParticipant> readSctParticipants() throws IOException {
+        return readFile(Paths.get("", subfolder, replaceDate(SctParticipant.FILE_MASK, Constants.DATE_EURO_ELIXIR)))
+                .map(item -> SctParticipant.getInstance(item))
+                .filter(item -> item.getSctIndicator() > 0)
+                .filter(participant -> Objects.isNull(participant.getValidTo()) ? true : !participant.getValidTo().isBefore(LocalDate.now()));
     }
-    
-    public Stream<Institution>readInstitutions(String rrrrmmdd) {
-        try {
-            return readFile(Paths.get("",subfolder,replaceDate(Institution.FILE_MASK, rrrrmmdd)))
-                    .map(item -> Institution.getInstance(item));
-        } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, null, ex);
-        }
-        return Stream.empty();        
+
+    public Stream<EeReplacement> readReplacements() throws IOException {
+        return readFile(Paths.get("", subfolder, replaceDate(EeReplacement.FILE_MASK, Constants.DATE_EURO_ELIXIR)))
+                .map(item -> EeReplacement.getInstance(item));
     }
-    
+
+    public Stream<EeParticipant> readParticipants() throws IOException {
+        return readFile(Paths.get("", subfolder, replaceDate(EeParticipant.FILE_MASK, Constants.DATE_EURO_ELIXIR)))
+                .map(item -> EeParticipant.getInstance(item))
+                .filter(participant -> Objects.isNull(participant.getValidTo()) ? true : !participant.getValidTo().isBefore(LocalDate.now()));
+    }
+
+    public Stream<EeDirectParticipant> readDirectParticipants() throws IOException {
+        return readFile(Paths.get("", subfolder, replaceDate(EeDirectParticipant.FILE_MASK, Constants.DATE_EURO_ELIXIR)))
+                .map(item -> EeDirectParticipant.getInstance(item))
+                .filter(participant -> Objects.isNull(participant.getValidTo()) ? true : !participant.getValidTo().isBefore(LocalDate.now()));
+    }
+
+    public Stream<EeIndirectParticipant> readIndirectParticipants() throws IOException {
+        return readFile(Paths.get("", subfolder, replaceDate(EeIndirectParticipant.FILE_MASK, Constants.DATE_EURO_ELIXIR)))
+                .map(item -> EeIndirectParticipant.getInstance(item))
+                .filter(participant -> Objects.isNull(participant.getValidTo()) ? true : !participant.getValidTo().isBefore(LocalDate.now()));
+    }
+
+    public Stream<Institution> readInstitutions() throws IOException {
+        return readFile(Paths.get("", subfolder, replaceDate(Institution.FILE_MASK, Constants.DATE_EURO_ELIXIR)))
+                .map(item -> Institution.getInstance(item));
+    }
+
     private Stream<String> readFile(Path path) throws IOException {
-        return Files.lines(path,Charset.forName("CP852"));
+        return Files.lines(path, Charset.forName("CP852"));
     }
-    
+
     private String replaceDate(String mask, String rrrrmmdd) {
-        return  mask.replace("rrrrmm", rrrrmmdd.substring(0, 6))
-                    .replace("dd", rrrrmmdd.substring(6, 8));
+        return mask.replace("rrrrmm", rrrrmmdd.substring(0, 6))
+                .replace("dd", rrrrmmdd.substring(6, 8));
     }
-    
+
     private String replaceDate(String mask, String rrmmdd, String RRMMDD) {
         return mask.replace("rrmmdd", rrmmdd).replace("RRMMDD", RRMMDD);
     }
-    
+
     public void writeFile(String filename, List<String> list) {
         try {
-            Files.write(Paths.get("",filename), list);
+            Files.write(Paths.get("", filename), list);
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
-        }        
+        }
     }
 }

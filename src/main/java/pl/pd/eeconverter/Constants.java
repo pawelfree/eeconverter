@@ -6,9 +6,13 @@ package pl.pd.eeconverter;
  */
 public class Constants {
 
-    public static final String DATE_EURO_ELIXIR = "20151113";
+    public static String DATE_EURO_ELIXIR = "20151113";
     
-    public static final String DATE_EACHA = "151116151122";
+    public static String DATE_EACHA = "151116151122";
+    
+    public static String INPUT_FOLDER = "";
+    
+    public static String OUTPUT_FOLDER = "";
     
     public static final String DATE_FORMAT = "yyyy-MM-dd";    
     
