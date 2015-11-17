@@ -5,7 +5,6 @@ import pl.pd.eeconverter.step2.Step2DirectParticipant;
 import pl.pd.eeconverter.eacha.EachaParticipant;
 import pl.pd.eeconverter.euroelixir.SctParticipant;
 import pl.pd.eeconverter.euroelixir.EeDirectParticipant;
-import pl.pd.eeconverter.euroelixir.EeParticipant;
 import pl.pd.eeconverter.euroelixir.EeIndirectParticipant;
 import pl.pd.eeconverter.euroelixir.EeReplacement;
 import java.io.IOException;
@@ -67,7 +66,6 @@ public class EEFiles {
                 replaceDateElixir(Step2DirectParticipant.FILE_MASK),
                 replaceDateElixir(Step2IndirectParticipant.FILE_MASK),
                 replaceDateElixir(SctParticipant.FILE_MASK),
-                replaceDateElixir(EeParticipant.FILE_MASK),
                 replaceDateElixir(EeIndirectParticipant.FILE_MASK),
                 replaceDateElixir(EeDirectParticipant.FILE_MASK),
                 replaceDateElixir(Institution.FILE_MASK)));
@@ -90,7 +88,6 @@ public class EEFiles {
     /**
      * Excluded banks for which representative BIC is NBPLPLPW
      *
-     * @param rrrrmmdd
      * @return
      */
     public Stream<Step2IndirectParticipant> readIndirectStep2Participants() throws IOException {
@@ -117,12 +114,6 @@ public class EEFiles {
     public Stream<EeReplacement> readReplacements() throws IOException {
         return readFile(replaceDateElixir(EeReplacement.FILE_MASK))
                 .map(item -> EeReplacement.getInstance(item));
-    }
-
-    public Stream<EeParticipant> readParticipants() throws IOException {
-        return readFile(replaceDateElixir(EeParticipant.FILE_MASK))
-                .map(item -> EeParticipant.getInstance(item))
-                .filter(participant -> Objects.isNull(participant.getValidTo()) ? true : !participant.getValidTo().isBefore(LocalDate.now()));
     }
 
     public Stream<EeDirectParticipant> readDirectParticipants() throws IOException {
