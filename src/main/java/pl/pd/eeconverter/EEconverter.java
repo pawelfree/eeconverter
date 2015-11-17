@@ -43,9 +43,10 @@ public class EEconverter {
 
             if (instance.verifyFilesExist()) {
 
+//TODO output folder
 //TODO replacements
-//TODO poprawic kontrole plikow
 //TODO code reuse eefiles-read 
+//TODO SEPA IbanToBic
 //TODO REMEMBER w nowym elixirze beda inne zbiory i inne kodowanie znakow (UTF-8)
 //        instance.readParticipants("20151015").forEach(System.out::println);        
 //        instance.readSctParticipants(DATE_EURO_ELIXIR).forEach(System.out::println); 
@@ -59,6 +60,7 @@ public class EEconverter {
 
                     instance.readEachaParticipants()
                             .forEach(item -> dir.add(item.getDirectoryItem()));
+                    
                     instance.writeFile("EA".concat(Constants.DATE_EACHA).concat(".txt"), dir.getLines());
 
                     dir.clear();
@@ -75,9 +77,9 @@ public class EEconverter {
 
                     instance.writeFile("ZB".concat(Constants.DATE_EURO_ELIXIR).concat(".txt"), dir.getLines());
 
-                    dir.getLines().stream().forEach(System.out::print);
+//                    dir.getLines().stream().forEach(System.out::print);
                 } catch (IOException ex) {
-                    System.out.println("" + ex.getLocalizedMessage());
+                    System.out.println("Coś poszło nie tak podczas generowania plików. " + ex.getLocalizedMessage());
                 }
 
             } else {

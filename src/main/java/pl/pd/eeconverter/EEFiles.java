@@ -18,8 +18,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Stream;
 import pl.pd.eeconverter.kir.Institution;
 
@@ -29,11 +27,7 @@ import pl.pd.eeconverter.kir.Institution;
  */
 public class EEFiles {
 
-    private static final Logger LOGGER = Logger.getLogger(EEFiles.class.getCanonicalName());
-
     private static final String NBP_BIC = "NBPLPLPW";
-
-    private static final int NUMBER_OF_REQUIRED_FILES = 8;
 
     private String subfolder = "";
 
@@ -159,11 +153,7 @@ public class EEFiles {
         return mask.replace("rrmmdd", rrmmdd).replace("RRMMDD", RRMMDD);
     }
 
-    public void writeFile(String filename, List<String> list) {
-        try {
-            Files.write(Paths.get("", filename), list);
-        } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, null, ex);
-        }
+    public void writeFile(String filename, List<String> list) throws IOException {
+        Files.write(Paths.get("", filename), list);
     }
 }
