@@ -8,6 +8,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 import pl.pd.eeconverter.Constants;
+import pl.pd.eeconverter.Iban2BicDirectoryItem;
 import pl.pd.eeconverter.SepaDirectoryItem;
 import pl.pd.eeconverter.SourceId;
 import pl.pd.eeconverter.kir.Institution;
@@ -78,19 +79,36 @@ public class SctParticipant {
 
         participants.filter(item -> item.getParticipantNumber().equalsIgnoreCase(this.participantNumber))
                 .forEach(participant -> {
-                    String name = institutions.stream()
-                            .filter(item -> item.getInstitutionNumber().equalsIgnoreCase(participant.getParticipantNumber().substring(0, 3)))
-                            .findAny()
-                            .map(i -> i.getInstitutionName())
-                            .orElse("");
+                    //TODO czy to mogloby byc połączenie po this.participantNumber
                     getValidityDates(new Dates(participant.getValidFrom(), participant.getValidTo())).ifPresent(date
-                            -> list.add(new SepaDirectoryItem(participantBic, "", name, sourceId, date.from, date.to, null))
+                            -> list.add(new SepaDirectoryItem(participantBic,
+                                    "",
+                                    getInstitutionName(institutions, participant.getParticipantNumber().substring(0, 3)),
+                                    sourceId,
+                                    date.from,
+                                    date.to,
+                                    null))
                     );
                 });
         return list;
     }
 
-    public List<SepaDirectoryItem> getDirectoryItem(Stream<? extends IEeParticipant> directs, Stream<? extends IEeParticipant> indirects,
+    public Iban2BicDirectoryItem getIban2BicDirectoryItem(List<Institution> institutions) {
+        return new Iban2BicDirectoryItem(getInstitutionName(institutions, this.participantNumber.substring(0, 3)),
+                participantBic,
+                participantBic.substring(4, 6),
+                participantNumber);
+    }
+
+    private String getInstitutionName(List<Institution> institutions, String bank) {
+        return institutions.stream()
+                .filter(item -> item.getInstitutionNumber().equalsIgnoreCase(bank))
+                .findAny()
+                .map(i -> i.getInstitutionName())
+                .orElse("");
+    }
+
+    public List<SepaDirectoryItem> getDirectoryItems(Stream<? extends IEeParticipant> directs, Stream<? extends IEeParticipant> indirects,
             Stream<EeReplacement> replacements, List<Institution> institutions) {
         List<SepaDirectoryItem> list = new ArrayList<>();
 

@@ -6,25 +6,21 @@ import java.util.stream.Collectors;
 
 /**
  *
- * @author paweldudek
+ * @author PawelDudek
  */
-public class SepaDirectory {
+public class Iban2BicDirectory {
 
-    private final List<SepaDirectoryItem> items;
+    private final List<Iban2BicDirectoryItem> items;
 
-    public SepaDirectory() {
+    public Iban2BicDirectory() {
         items = new ArrayList<>();
     }
 
-    public List<SepaDirectoryItem> getItems() {
-        return items;
-    }
-
-    public void add(SepaDirectoryItem item) {
+    public void add(Iban2BicDirectoryItem item) {
         items.add(item);
     }
     
-    public void addAll(List<SepaDirectoryItem> items) {
+    public void addAll(List<Iban2BicDirectoryItem> items) {
         this.items.addAll(items);
     }
     
@@ -36,6 +32,6 @@ public class SepaDirectory {
         return items.stream()
                 .map(item -> item.getLine())
                 .collect(Collectors.toList());
-    }
-
+    }    
+    
 }

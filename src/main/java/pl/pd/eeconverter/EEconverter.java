@@ -46,7 +46,6 @@ public class EEconverter {
 //TODO output folder
 //TODO replacements
 //TODO code reuse eefiles-read 
-//TODO SEPA IbanToBic
 //TODO REMEMBER w nowym elixirze beda inne zbiory i inne kodowanie znakow (UTF-8)
 //        instance.readParticipants("20151015").forEach(System.out::println);        
 //        instance.readSctParticipants(DATE_EURO_ELIXIR).forEach(System.out::println); 
@@ -65,8 +64,8 @@ public class EEconverter {
 
                     dir.clear();
 
-                    instance.readSctParticipants()
-                            .forEach(item -> dir.addAll(item.getDirectoryItem(directs.stream(), indirects.stream(),
+                    instance.readSctParticipants(true)
+                            .forEach(item -> dir.addAll(item.getDirectoryItems(directs.stream(), indirects.stream(),
                                     replacements.stream(), institutions)));
 
                     instance.readDirectStep2Participants()
@@ -76,8 +75,16 @@ public class EEconverter {
                             .forEach(item -> dir.add(item.getDirectoryItem()));
 
                     instance.writeFile("ZB".concat(Constants.DATE_EURO_ELIXIR).concat(".txt"), dir.getLines());
+                    
+                    Iban2BicDirectory idir = new Iban2BicDirectory();
+                    
+                    instance.readSctParticipants(false)
+                            .forEach(item -> idir.add(item.getIban2BicDirectoryItem(institutions)));
+                    
+                    //TODO nazwa
+                    //TODO ważność połączeń BIC iban ??
+                    instance.writeFile("I2B".concat(Constants.DATE_EURO_ELIXIR).concat(".txt"), idir.getLines());
 
-//                    dir.getLines().stream().forEach(System.out::print);
                 } catch (IOException ex) {
                     System.out.println("Coś poszło nie tak podczas generowania plików. " + ex.getLocalizedMessage());
                 }

@@ -24,7 +24,7 @@ public class SepaDirectoryItem {
         this.routingBic = routingBic;
         this.bankName = bankName;
         this.source = source;
-        this.validFrom = validFrom; 
+        this.validFrom = validFrom;
         this.validTo = validTo;
         this.cutoffTime = cutoffTime;
     }
@@ -52,9 +52,26 @@ public class SepaDirectoryItem {
     public String getCutoffTime() {
         return Objects.isNull(cutoffTime) ? "" : cutoffTime.format(DateTimeFormatter.ofPattern(Constants.HOUR_FORMAT));
     }
-    
+
     public String getRoutingBic() {
         return Objects.isNull(routingBic) ? "" : routingBic;
     }
-       
+
+    public String getLine() {
+        return "\"".concat(getBic())
+                .concat("\",\"")
+                .concat(getRoutingBic())
+                .concat("\",\"")
+                .concat(getBankName().trim())
+                .concat("\",\"")
+                .concat(getSource())
+                .concat("\",\"")
+                .concat(getValidFrom())
+                .concat("\",\"")
+                .concat(getValidTo())
+                .concat("\",\"")
+                .concat(getCutoffTime())
+                .concat("\"");
+            //.concat(System.lineSeparator());
+    }
 }

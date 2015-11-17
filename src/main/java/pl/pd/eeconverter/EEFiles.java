@@ -103,12 +103,14 @@ public class EEFiles {
     /**
      * Returns stream of SCT Participants file for which SCT flag is > 0
      *
+     * @param sepa if participant is member of SCT schema
      * @return
+     * @throws java.io.IOException
      */
-    public Stream<SctParticipant> readSctParticipants() throws IOException {
+    public Stream<SctParticipant> readSctParticipants(boolean sepa) throws IOException {
         return readFile(replaceDateElixir(SctParticipant.FILE_MASK))
                 .map(item -> SctParticipant.getInstance(item))
-                .filter(item -> item.getSctIndicator() > 0)
+                .filter(item -> sepa ? item.getSctIndicator() > 0 : true)
                 .filter(participant -> Objects.isNull(participant.getValidTo()) ? true : !participant.getValidTo().isBefore(LocalDate.now()));
     }
 
