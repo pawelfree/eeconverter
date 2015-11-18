@@ -61,32 +61,30 @@ public class EeDirectParticipant implements IEeParticipant {
     @Override
     public List<Iban2BicDirectoryItem> getIban2BicDirectoryItem(List<Institution> institutions, List<SctParticipant> sctParticipants) {
         List<SctParticipant> lst = sctParticipants.stream()
-                .filter(sctParticipant -> (sctParticipant.getParticipantNumber().compareToIgnoreCase(participantNumber) == 0) )//&& sctParticipant.isSct())
+                .filter(sctParticipant -> (sctParticipant.getParticipantNumber().compareToIgnoreCase(participantNumber) == 0))
                 .collect(Collectors.toList());
-        
+
         return filter(lst).stream()
                 .map(sctParticipant -> new Iban2BicDirectoryItem(sctParticipant.getInstitutionName(institutions),
                         sctParticipant.getBic(),
                         sctParticipant.getBic().substring(4, 6),
-                        participantNumber, validFrom, validTo))
+                        participantNumber, sctParticipant.getValidFrom(), sctParticipant.getValidTo()))
                 .collect(Collectors.toList());
 
     }
 
-    //TODO połaczyć w jedną listę u góry - dwie listy w collectorlist
     private List<SctParticipant> filter(List<SctParticipant> lst) {
         List<SctParticipant> list = lst.stream()
                 .filter(item -> item.isMainBic())
                 .collect(Collectors.toList());
 
         if (list.isEmpty()) {
-            List<SctParticipant> l = lst.stream().collect(Collector.of(
+            return lst.stream().collect(Collector.of(
                     CollectorList::new,
                     CollectorList::add,
                     CollectorList::addAll,
                     CollectorList::finish)
             );
-            return l;
         } else {
             return list;
         }

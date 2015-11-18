@@ -36,16 +36,16 @@ public class SctParticipant {
         return sctIndicator;
     }
 
+    public LocalDate getValidFrom() {
+        return validFrom;
+    }    
+    
     public LocalDate getValidTo() {
         return validTo;
     }
 
     public boolean isMainBic() {
         return "1".compareToIgnoreCase(mainBicIndicator) == 0;
-    }
-    
-    public boolean isSct() {
-        return sctIndicator > Constants.SCT;
     }
     
     public String getParticipantNumber() {

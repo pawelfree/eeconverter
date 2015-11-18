@@ -33,7 +33,7 @@ public class Iban2BicDirectoryItem {
         this.validFrom = validFrom;
         this.validTo = validTo;
     }
-
+    
     public String getValidFrom() {
         return validFrom.format(DateTimeFormatter.ofPattern(Constants.DATE_FORMAT));
     }
