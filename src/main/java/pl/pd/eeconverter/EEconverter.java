@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import pl.pd.eeconverter.euroelixir.EeReplacement;
-import pl.pd.eeconverter.euroelixir.IEeParticipant;
+import pl.pd.eeconverter.euroelixir.EeParticipant;
 import pl.pd.eeconverter.euroelixir.SctParticipant;
 import pl.pd.eeconverter.kir.Institution;
 
@@ -44,7 +44,6 @@ public class EEconverter {
             }
 
             if (instance.verifyFilesExist()) {
-
 //TODO test dwa wpisy o różnej ważności w I2B
 //TODO daty ważności przy liczeniu I2B -> mniejsza z do 
 //TODO collector zamiast przetwarzania listy - metoda filter
@@ -54,19 +53,21 @@ public class EEconverter {
 //        instance.readParticipants("20151015").forEach(System.out::println);        
 //        instance.readSctParticipants(DATE_EURO_ELIXIR).forEach(System.out::println); 
                 try {
-                    List<IEeParticipant> directs = instance.readDirectParticipants().collect(Collectors.toList());
-                    List<IEeParticipant> indirects = instance.readIndirectParticipants().collect(Collectors.toList());
+                    List<EeParticipant> directs = instance.readDirectParticipants().collect(Collectors.toList());
+                    List<EeParticipant> indirects = instance.readIndirectParticipants().collect(Collectors.toList());
                     List<EeReplacement> replacements = instance.readReplacements().collect(Collectors.toList());
                     List<Institution> institutions = instance.readInstitutions().collect(Collectors.toList());
                     List<SctParticipant> sctParticipants = instance.readSctParticipants().collect(Collectors.toList());
 
                     SepaDirectory dir = new SepaDirectory();
 
+                    //EACHA directory
                     instance.readEachaParticipants()
                             .forEach(participant -> dir.add(participant.getDirectoryItem()));
 
                     instance.writeFile("EA".concat(Constants.DATE_EACHA).concat(".txt"), dir.getLines());
 
+                    //SEPA directory
                     dir.clear();
 
                     sctParticipants.stream()
@@ -83,13 +84,16 @@ public class EEconverter {
 
                     instance.writeFile("ZB".concat(Constants.DATE_EURO_ELIXIR).concat(".txt"), dir.getLines());
                     
+                    //IBAN 2 BIC directory
                     Iban2BicDirectory idir = new Iban2BicDirectory();
 
+                    directs.addAll(indirects);
+                    
                     directs.stream()
-                            .forEach(participant -> idir.addAll(participant.getIban2BicDirectoryItem(institutions, sctParticipants)));
-
-                    indirects.stream()
-                            .forEach(participant -> idir.addAll(participant.getIban2BicDirectoryItem(institutions, sctParticipants)));
+                            .forEach(participant -> idir.addAll(participant.getIban2BicDirectoryItem(institutions, 
+                                    sctParticipants, 
+                                    participant.getRepresentativeNumber(), 
+                                    participant.getParticipantNumber())));
 
                     instance.writeFile("I2B".concat(Constants.DATE_EURO_ELIXIR).concat(".txt"), idir.getLines());
 

@@ -123,7 +123,7 @@ public class SctParticipant {
         );
     }
 
-    private List<SepaDirectoryItem> getItems(Stream<? extends IEeParticipant> participants, int sourceId, List<Institution> institutions) {
+    private List<SepaDirectoryItem> getItems(Stream<? extends EeParticipant> participants, int sourceId, List<Institution> institutions) {
         List<SepaDirectoryItem> list = new ArrayList<>();
 
         participants.filter(item -> item.getParticipantNumber().equalsIgnoreCase(this.participantNumber))
@@ -149,7 +149,7 @@ public class SctParticipant {
                 .orElse("");
     }
 
-    public List<SepaDirectoryItem> getDirectoryItems(Stream<? extends IEeParticipant> directs, Stream<? extends IEeParticipant> indirects,
+    public List<SepaDirectoryItem> getDirectoryItems(Stream<? extends EeParticipant> directs, Stream<? extends EeParticipant> indirects,
             Stream<EeReplacement> replacements, List<Institution> institutions) {
         List<SepaDirectoryItem> list = new ArrayList<>();
 
