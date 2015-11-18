@@ -1,7 +1,6 @@
 package pl.pd.eeconverter;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,18 +36,18 @@ public class EEconverter {
             int len = args.length;
             if (len >= 3) {
                 Constants.INPUT_FOLDER = args[2];
-                instance.setSubfolder("zbiory bazowe");
+                instance.setInfolder(Constants.INPUT_FOLDER);
             }
             if (len >= 4) {
                 Constants.OUTPUT_FOLDER = args[3];
+                instance.setOutfolder(Constants.OUTPUT_FOLDER);
             }
 
             if (instance.verifyFilesExist()) {
 
-//TODO dwa wpisy o różnej ważności w I2B
+//TODO test dwa wpisy o różnej ważności w I2B
 //TODO daty ważności przy liczeniu I2B -> mniejsza z do 
-//TODO collector zamiast przetwarzania listy - metoda filter                 
-//TODO output folder
+//TODO collector zamiast przetwarzania listy - metoda filter
 //TODO replacements
 //TODO code reuse eefiles-read 
 //TODO REMEMBER w nowym elixirze beda inne zbiory i inne kodowanie znakow (UTF-8)

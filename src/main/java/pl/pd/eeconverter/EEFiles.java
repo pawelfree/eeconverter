@@ -26,7 +26,9 @@ import pl.pd.eeconverter.kir.Institution;
  */
 public class EEFiles {
 
-    private String subfolder = "";
+    private String infolder = "";
+    
+    private String outfolder = "";
 
     private static EEFiles instance;
 
@@ -41,9 +43,13 @@ public class EEFiles {
             return instance;
         }
     }
+    
+    public void setOutfolder(String outfolder) {
+        this.outfolder = outfolder;
+    }
 
-    public void setSubfolder(String subfolder) {
-        this.subfolder = subfolder;
+    public void setInfolder(String infolder) {
+        this.infolder = infolder;
     }
 
     public boolean verifyParams(String param1, String param2) {
@@ -118,7 +124,7 @@ public class EEFiles {
     }
 
     private Stream<String> readFile(String filename) throws IOException {
-        Path path = Paths.get("", subfolder, filename);
+        Path path = Paths.get("", infolder, filename);
         return Files.lines(path, Charset.forName("CP852"));
     }
 
@@ -132,6 +138,6 @@ public class EEFiles {
     }
 
     public void writeFile(String filename, List<String> list) throws IOException {
-        Files.write(Paths.get("", filename), list);
+        Files.write(Paths.get("", outfolder, filename), list);
     }
 }
