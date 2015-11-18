@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import pl.pd.eeconverter.euroelixir.EeReplacement;
 import pl.pd.eeconverter.euroelixir.IEeParticipant;
+import pl.pd.eeconverter.euroelixir.SctParticipant;
 import pl.pd.eeconverter.kir.Institution;
 
 /**
@@ -43,6 +44,7 @@ public class EEconverter {
 
             if (instance.verifyFilesExist()) {
 
+//TODO collector zamiast przetwarzania listy - metoda filter                 
 //TODO output folder
 //TODO replacements
 //TODO code reuse eefiles-read 
@@ -54,35 +56,41 @@ public class EEconverter {
                     List<IEeParticipant> indirects = instance.readIndirectParticipants().collect(Collectors.toList());
                     List<EeReplacement> replacements = instance.readReplacements().collect(Collectors.toList());
                     List<Institution> institutions = instance.readInstitutions().collect(Collectors.toList());
+                    List<SctParticipant> sctParticipants = instance.readSctParticipants().collect(Collectors.toList());
 
-                    SepaDirectory dir = new SepaDirectory();
+//                    SepaDirectory dir = new SepaDirectory();
+//
+//                    instance.readEachaParticipants()
+//                            .forEach(participant -> dir.add(participant.getDirectoryItem()));
+//
+//                    instance.writeFile("EA".concat(Constants.DATE_EACHA).concat(".txt"), dir.getLines());
+//
+//                    dir.clear();
+//
+//                    sctParticipants.stream()
+//                            .filter(participant -> participant.getSctIndicator() > Constants.SCT)
+//                            .forEach(participant -> dir.addAll(participant.getDirectoryItems(directs.stream(), indirects.stream(),
+//                                    replacements.stream(), institutions)));
+//
+//                    instance.readDirectStep2Participants()
+//                            .forEach(participant -> dir.add(participant.getDirectoryItem()));
+//
+//                    instance.readIndirectStep2Participants()
+//                            .filter(participant -> !participant.getRepresentativeBic().contains(Constants.NBP_BIC))
+//                            .forEach(participant -> dir.add(participant.getDirectoryItem()));
+//
+//                    instance.writeFile("ZB".concat(Constants.DATE_EURO_ELIXIR).concat(".txt"), dir.getLines());
 
-                    instance.readEachaParticipants()
-                            .forEach(item -> dir.add(item.getDirectoryItem()));
-                    
-                    instance.writeFile("EA".concat(Constants.DATE_EACHA).concat(".txt"), dir.getLines());
-
-                    dir.clear();
-
-                    instance.readSctParticipants(true)
-                            .forEach(item -> dir.addAll(item.getDirectoryItems(directs.stream(), indirects.stream(),
-                                    replacements.stream(), institutions)));
-
-                    instance.readDirectStep2Participants()
-                            .forEach(item -> dir.add(item.getDirectoryItem()));
-
-                    instance.readIndirectStep2Participants()
-                            .forEach(item -> dir.add(item.getDirectoryItem()));
-
-                    instance.writeFile("ZB".concat(Constants.DATE_EURO_ELIXIR).concat(".txt"), dir.getLines());
-                    
                     Iban2BicDirectory idir = new Iban2BicDirectory();
+
+                    directs.stream()
+                            //.filter(participant -> participant.isSctParticipant(sctParticipants))
+                            .forEach(participant -> idir.addAll(participant.getIban2BicDirectoryItem(institutions, sctParticipants)));
+
+//                    indirects.stream()
+//                            .filter(participant -> participant.isSctParticipant(sctParticipants))
+//                            .forEach(participant -> idir.addAll(participant.getIban2BicDirectoryItem(institutions, sctParticipants)));
                     
-                    instance.readSctParticipants(false)
-                            .forEach(item -> idir.add(item.getIban2BicDirectoryItem(institutions)));
-                    
-                    //TODO nazwa
-                    //TODO ważność połączeń BIC iban ??
                     instance.writeFile("I2B".concat(Constants.DATE_EURO_ELIXIR).concat(".txt"), idir.getLines());
 
                 } catch (IOException ex) {

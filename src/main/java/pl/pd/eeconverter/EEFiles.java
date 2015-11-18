@@ -26,8 +26,6 @@ import pl.pd.eeconverter.kir.Institution;
  */
 public class EEFiles {
 
-    private static final String NBP_BIC = "NBPLPLPW";
-
     private String subfolder = "";
 
     private static EEFiles instance;
@@ -85,29 +83,15 @@ public class EEFiles {
                 .filter(participant -> Objects.isNull(participant.getValidTo()) ? true : !participant.getValidTo().isBefore(LocalDate.now()));
     }
 
-    /**
-     * Excluded banks for which representative BIC is NBPLPLPW
-     *
-     * @return
-     */
     public Stream<Step2IndirectParticipant> readIndirectStep2Participants() throws IOException {
         return readFile(replaceDateElixir(Step2IndirectParticipant.FILE_MASK))
                 .map(item -> Step2IndirectParticipant.getInstance(item))
-                .filter(participant -> Objects.isNull(participant.getValidTo()) ? true : !participant.getValidTo().isBefore(LocalDate.now()))
-                .filter(participant -> !participant.getRepresentativeBic().contains(NBP_BIC));
+                .filter(participant -> Objects.isNull(participant.getValidTo()) ? true : !participant.getValidTo().isBefore(LocalDate.now()));
     }
 
-    /**
-     * Returns stream of SCT Participants file for which SCT flag is > 0
-     *
-     * @param sepa if participant is member of SCT schema
-     * @return
-     * @throws java.io.IOException
-     */
-    public Stream<SctParticipant> readSctParticipants(boolean sepa) throws IOException {
+    public Stream<SctParticipant> readSctParticipants() throws IOException {
         return readFile(replaceDateElixir(SctParticipant.FILE_MASK))
                 .map(item -> SctParticipant.getInstance(item))
-                .filter(item -> sepa ? item.getSctIndicator() > 0 : true)
                 .filter(participant -> Objects.isNull(participant.getValidTo()) ? true : !participant.getValidTo().isBefore(LocalDate.now()));
     }
 

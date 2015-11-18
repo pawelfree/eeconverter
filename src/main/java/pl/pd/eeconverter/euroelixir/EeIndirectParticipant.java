@@ -2,8 +2,11 @@ package pl.pd.eeconverter.euroelixir;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Objects;
 import pl.pd.eeconverter.Constants;
+import pl.pd.eeconverter.Iban2BicDirectoryItem;
+import pl.pd.eeconverter.kir.Institution;
 
 /**
  *
@@ -62,5 +65,10 @@ public class EeIndirectParticipant implements IEeParticipant {
                 line.substring(8,16),
                 LocalDate.parse(line.subSequence(16,24), DateTimeFormatter.ofPattern(Constants.OF_DATE)),
                 line.substring(24, 32).trim().isEmpty() ? null : LocalDate.parse(line.substring(24,32), DateTimeFormatter.ofPattern(Constants.OF_DATE)));
+    }
+
+    @Override
+    public List<Iban2BicDirectoryItem> getIban2BicDirectoryItem(List<Institution> institutions, List<SctParticipant> sctParticipants) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

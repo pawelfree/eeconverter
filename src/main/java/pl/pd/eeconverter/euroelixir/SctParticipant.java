@@ -8,7 +8,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 import pl.pd.eeconverter.Constants;
-import pl.pd.eeconverter.Iban2BicDirectoryItem;
 import pl.pd.eeconverter.SepaDirectoryItem;
 import pl.pd.eeconverter.SourceId;
 import pl.pd.eeconverter.kir.Institution;
@@ -41,6 +40,56 @@ public class SctParticipant {
         return validTo;
     }
 
+    public boolean isMainBic() {
+        return "1".compareToIgnoreCase(mainBicIndicator) == 0;
+    }
+    
+    public boolean isSct() {
+        return sctIndicator > Constants.SCT;
+    }
+    
+    public String getParticipantNumber() {
+        return participantNumber;
+    }
+    
+    public String getBic() {
+        return this.participantBic;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 13 * hash + Objects.hashCode(this.participantNumber);
+        hash = 13 * hash + Objects.hashCode(this.validFrom);
+        hash = 13 * hash + Objects.hashCode(this.validTo);
+        hash = 13 * hash + Objects.hashCode(this.mainBicIndicator);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final SctParticipant other = (SctParticipant) obj;
+        if (!Objects.equals(this.participantNumber, other.participantNumber)) {
+            return false;
+        }
+        if (!Objects.equals(this.mainBicIndicator, other.mainBicIndicator)) {
+            return false;
+        }
+        if (!Objects.equals(this.validFrom, other.validFrom)) {
+            return false;
+        }
+        return Objects.equals(this.validTo, other.validTo);
+    }
+    
     private SctParticipant(String participantBic, String participantNumber, LocalDate validFrom, LocalDate validTo,
             String mainBicIndicator, String sctIndicator) {
         this.participantBic = participantBic;
@@ -79,11 +128,10 @@ public class SctParticipant {
 
         participants.filter(item -> item.getParticipantNumber().equalsIgnoreCase(this.participantNumber))
                 .forEach(participant -> {
-                    //TODO czy to mogloby byc połączenie po this.participantNumber
                     getValidityDates(new Dates(participant.getValidFrom(), participant.getValidTo())).ifPresent(date
                             -> list.add(new SepaDirectoryItem(participantBic,
                                     "",
-                                    getInstitutionName(institutions, participant.getParticipantNumber().substring(0, 3)),
+                                    getInstitutionName(institutions),
                                     sourceId,
                                     date.from,
                                     date.to,
@@ -93,16 +141,9 @@ public class SctParticipant {
         return list;
     }
 
-    public Iban2BicDirectoryItem getIban2BicDirectoryItem(List<Institution> institutions) {
-        return new Iban2BicDirectoryItem(getInstitutionName(institutions, this.participantNumber.substring(0, 3)),
-                participantBic,
-                participantBic.substring(4, 6),
-                participantNumber);
-    }
-
-    private String getInstitutionName(List<Institution> institutions, String bank) {
+    public String getInstitutionName(List<Institution> institutions) {
         return institutions.stream()
-                .filter(item -> item.getInstitutionNumber().equalsIgnoreCase(bank))
+                .filter(item -> item.getInstitutionNumber().equalsIgnoreCase(this.participantNumber.substring(0, 3)))
                 .findAny()
                 .map(i -> i.getInstitutionName())
                 .orElse("");
@@ -142,13 +183,15 @@ public class SctParticipant {
                 //2.1 sct_od >= ee_od => sct_od ,sct_do
                 dates = Optional.of(new Dates(validFrom, validTo));
             } else //2.2 sct_od <  ee_od =>  
-             if (validTo.isAfter(ee.from) || validTo.isEqual(ee.from)) {
+            {
+                if (validTo.isAfter(ee.from) || validTo.isEqual(ee.from)) {
                     //2.2.1               sct_do >= ee_od => ee_od, sct_do
                     dates = Optional.of(new Dates(ee.from, validTo));
                 } else {
                     //2.2.2               sct_do <  ee_od => null, null
                     //do nothing
                 }
+            }
             ////koniec 2
         } else if (Objects.isNull(validTo) && Objects.nonNull(ee.to)) {
             //3. sct_do==null & ee_do!=null
@@ -174,31 +217,25 @@ public class SctParticipant {
                     //4.1.1               sct_od >  ee_do => null, null
                     //do nothing
                 } else //4.1.2               sct_od <= ee_do
-                {
-                    if (validTo.isAfter(ee.to) || validTo.isEqual(ee.to)) {
+                 if (validTo.isAfter(ee.to) || validTo.isEqual(ee.to)) {
                         //4.1.2.1                           sct_do >= ee_do => sct_od, ee_do
                         dates = Optional.of(new Dates(validFrom, ee.to));
                     } else {
                         //4.1.2.2                           sct_do <  ee_do => sct_od, sct_do
                         dates = Optional.of(new Dates(validFrom, validTo));
                     }
-                }
             } else //4.2 sct_od <  ee_od
-            {
-                if (validTo.isBefore(ee.from)) {
+             if (validTo.isBefore(ee.from)) {
                     //4.2.1               sct_do <  ee_od => null, null
                     //do nothing
                 } else //4.2.2               sct_do >= ee_od
-                {
-                    if (validTo.isAfter(ee.to) || validTo.isEqual(ee.to)) {
+                 if (validTo.isAfter(ee.to) || validTo.isEqual(ee.to)) {
                         //4.2.2.1                           sct_do >= ee_do => ee_od, ee_do
                         dates = Optional.of(new Dates(ee.from, ee.to));
                     } else {
                         //4.2.2.2                           sct_do <  ee_do => ee_od, sct_do
                         dates = Optional.of(new Dates(ee.from, validTo));
                     }
-                }
-            }
             ////koniec 4
         }
 
