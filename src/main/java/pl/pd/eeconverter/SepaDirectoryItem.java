@@ -18,12 +18,14 @@ public class SepaDirectoryItem {
     private final LocalDate validFrom;
     private final LocalDate validTo;
     private final LocalTime cutoffTime;
+    private final String systemId;
 
-    public SepaDirectoryItem(String bic, String routingBic, String bankName, int source, LocalDate validFrom, LocalDate validTo, LocalTime cutoffTime) {
+    public SepaDirectoryItem(String bic, String routingBic, String bankName, int source, String systemId, LocalDate validFrom, LocalDate validTo, LocalTime cutoffTime) {
         this.bic = bic;
         this.routingBic = routingBic;
         this.bankName = bankName;
         this.source = source;
+        this.systemId = systemId;
         this.validFrom = validFrom;
         this.validTo = validTo;
         this.cutoffTime = cutoffTime;
@@ -56,6 +58,10 @@ public class SepaDirectoryItem {
     public String getRoutingBic() {
         return Objects.isNull(routingBic) ? "" : routingBic;
     }
+    
+    public String getSystemId() {
+        return systemId;
+    }
 
     public String getLine() {
         return "\"".concat(getBic())
@@ -66,6 +72,8 @@ public class SepaDirectoryItem {
                 .concat("\",\"")
                 .concat(getSource())
                 .concat("\",\"")
+                .concat(getSystemId())
+                .concat("\",\"")                
                 .concat(getValidFrom())
                 .concat("\",\"")
                 .concat(getValidTo())

@@ -6,10 +6,26 @@ package pl.pd.eeconverter;
  */
 public enum SourceId {
     
-    Manual,
-    KIR_Direct,
-    KIR_Indirect,
-    EACHA,
-    SEPA_Direct,
-    SEPA_Indirect   
+    Manual(10,""),
+    KIR_Direct(20,"EES"),
+    KIR_Indirect(20,"EES"),
+    EACHA(30,"EEM"),
+    SEPA_Direct(40,"EEM"),
+    SEPA_Indirect(40,"EEM"); 
+    
+    int priority;
+    String systemId;
+    
+    SourceId(int priority, String systemId) {
+        this.priority = priority;
+        this.systemId = systemId;
+    }
+    
+    public int priority() {
+        return priority;
+    }
+    
+    public String systemId() {
+        return systemId;
+    }
 }

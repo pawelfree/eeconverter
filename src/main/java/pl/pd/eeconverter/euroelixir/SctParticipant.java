@@ -123,7 +123,7 @@ public class SctParticipant {
         );
     }
 
-    private List<SepaDirectoryItem> getItems(Stream<? extends EeParticipant> participants, int sourceId, List<Institution> institutions) {
+    private List<SepaDirectoryItem> getItems(Stream<? extends EeParticipant> participants, SourceId sourceId, List<Institution> institutions) {
         List<SepaDirectoryItem> list = new ArrayList<>();
 
         participants.filter(item -> item.getParticipantNumber().equalsIgnoreCase(this.participantNumber))
@@ -132,7 +132,8 @@ public class SctParticipant {
                             -> list.add(new SepaDirectoryItem(participantBic,
                                     "",
                                     getInstitutionName(institutions),
-                                    sourceId,
+                                    sourceId.priority(),
+                                    sourceId.systemId(),
                                     date.from,
                                     date.to,
                                     null))
@@ -153,8 +154,8 @@ public class SctParticipant {
             Stream<EeReplacement> replacements, List<Institution> institutions) {
         List<SepaDirectoryItem> list = new ArrayList<>();
 
-        list.addAll(getItems(directs, SourceId.KIR_Direct.ordinal(), institutions));
-        list.addAll(getItems(indirects, SourceId.KIR_Indirect.ordinal(), institutions));
+        list.addAll(getItems(directs, SourceId.KIR_Direct, institutions));
+        list.addAll(getItems(indirects, SourceId.KIR_Indirect, institutions));
 
         return list;
     }
