@@ -50,7 +50,7 @@ public abstract class EeParticipant {
                 .map(sctParticipant -> new Iban2BicDirectoryItem(sctParticipant.getInstitutionName(institutions),
                         sctParticipant.getBic(),
                         sctParticipant.getBic().substring(4, 6),
-                        participantNumber, sctParticipant.getValidFrom(), sctParticipant.getValidTo()))
+                        participantNumber, sctParticipant.getValidFrom(), getValidTo()))
                 .collect(Collectors.toList());
     }    
     
