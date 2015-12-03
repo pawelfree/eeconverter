@@ -24,8 +24,9 @@ public class EEconverter {
                     + "pierwszy - data zbiorów bazowych (RRRRMMDD)\n\t"
                     + "drugi - data zbioru EACHA (RRMMDDrrmmdd)\n\t");
 
-//                    "trzeci - (opcjonalny) względna ścieżka folderu ze zbiorami bazowmi\n\t"
-//                    "czwarty - (opcjonalny) względna ścieżka do folderu zbiorów wynikowych"
+//                    "trzeci - (opcjonalny) kompresowanie pllików            
+//                    "czwarty - (opcjonalny) względna ścieżka folderu ze zbiorami bazowmi\n\t"
+//                    "piąty - (opcjonalny) względna ścieżka do folderu zbiorów wynikowych"
             System.out.println("Parametry wywołania : ".concat(Arrays.toString(args)));
 
         } else if (instance.verifyParams(args[0], args[1])) {
@@ -35,11 +36,14 @@ public class EEconverter {
 
             int len = args.length;
             if (len >= 3) {
-                Constants.INPUT_FOLDER = args[2];
+                Constants.COMPRESS_FILES = Boolean.valueOf(args[2]);
+            }            
+            if (len >= 4) {
+                Constants.INPUT_FOLDER = args[3];
                 instance.setInfolder(Constants.INPUT_FOLDER);
             }
-            if (len >= 4) {
-                Constants.OUTPUT_FOLDER = args[3];
+            if (len >= 5) {
+                Constants.OUTPUT_FOLDER = args[4];
                 instance.setOutfolder(Constants.OUTPUT_FOLDER);
             }
 
@@ -65,7 +69,7 @@ public class EEconverter {
                     instance.readEachaParticipants()
                             .forEach(participant -> dir.add(participant.getDirectoryItem()));
 
-                    instance.writeFile("EA".concat(Constants.DATE_EACHA).concat(".txt"), dir.getLines());
+                    instance.writeFile("EA".concat(Constants.DATE_EACHA), dir.getLines());
 
                     //SEPA directory
                     dir.clear();
@@ -82,7 +86,7 @@ public class EEconverter {
                             .filter(participant -> !participant.getRepresentativeBic().contains(Constants.NBP_BIC))
                             .forEach(participant -> dir.add(participant.getDirectoryItem()));
 
-                    instance.writeFile("ZB".concat(Constants.DATE_EURO_ELIXIR).concat(".txt"), dir.getLines());
+                    instance.writeFile("ZB".concat(Constants.DATE_EURO_ELIXIR), dir.getLines());
                     
                     //IBAN 2 BIC directory
                     Iban2BicDirectory idir = new Iban2BicDirectory();
@@ -95,7 +99,7 @@ public class EEconverter {
                                     participant.getRepresentativeNumber(), 
                                     participant.getParticipantNumber())));
 
-                    instance.writeFile("I2B".concat(Constants.DATE_EURO_ELIXIR).concat(".txt"), idir.getLines());
+                    instance.writeFile("I2B".concat(Constants.DATE_EURO_ELIXIR), idir.getLines());
 
                 } catch (IOException ex) {
                     System.out.println("Coś poszło nie tak podczas generowania plików. " + ex.getLocalizedMessage());

@@ -16,11 +16,13 @@ public class Constants {
     
     public static String OUTPUT_FOLDER = "";
     
-    public static final String DATE_FORMAT = "yyyy-MM-dd";    
+    public static final String DATE_FORMAT = "yyyy-MM-dd";
     
     public static final String HOUR_FORMAT = "HH.mm";
     
     public static final String OF_DATE = "yyyyMMdd";
     
     public static final int SCT = 0;
+    
+    public static boolean COMPRESS_FILES = false;
 }

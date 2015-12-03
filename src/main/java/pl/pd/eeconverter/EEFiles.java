@@ -8,6 +8,7 @@ import pl.pd.eeconverter.euroelixir.EeDirectParticipant;
 import pl.pd.eeconverter.euroelixir.EeIndirectParticipant;
 import pl.pd.eeconverter.euroelixir.EeReplacement;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -15,9 +16,14 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 import pl.pd.eeconverter.kir.Institution;
 
 /**
@@ -138,6 +144,29 @@ public class EEFiles {
     }
 
     public void writeFile(String filename, List<String> list) throws IOException {
-        Files.write(Paths.get("", outfolder, filename), list);
+        if (Constants.COMPRESS_FILES) {
+            compressData(filename, list);
+        }
+        else 
+            Files.write(Paths.get("", outfolder, filename.concat(".txt")), list);
     }
+    
+    private void compressData(String filename, List<String> list) throws IOException {
+
+        try (OutputStream fileOutput = Files.newOutputStream(Paths.get("", outfolder, filename.concat(".zip")));
+                ZipOutputStream zipOutput = new ZipOutputStream(fileOutput);) {
+
+            ZipEntry zipEntry = new ZipEntry(filename.concat(".txt"));
+            zipOutput.putNextEntry(zipEntry);
+            
+            Iterator i = list.iterator();
+            while (i.hasNext()) {
+                zipOutput.write(((String)i.next()).concat("\n").getBytes("UTF-8"));
+            }
+            zipOutput.closeEntry();
+        } catch (IOException ex) {
+            throw new IOException(ex);
+        }
+    }
+
 }
