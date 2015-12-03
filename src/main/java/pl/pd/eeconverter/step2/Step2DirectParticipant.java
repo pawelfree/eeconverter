@@ -64,7 +64,8 @@ public class Step2DirectParticipant {
     
     public SepaDirectoryItem getDirectoryItem() {
         return new SepaDirectoryItem(participantBic, 
-                "","\"".concat(participantName).concat("\""), 
+                "",
+                participantName, 
                 SourceId.SEPA_Direct.priority(), 
                 SourceId.SEPA_Direct.systemId(),
                 validFrom,
