@@ -40,7 +40,7 @@ public class EachaParticipant {
         this.participantName = participantName;
         this.validFrom = validFrom;
         this.validTo = validTo;
-        this.cutoffHour = cutoffHour;
+        this.cutoffHour = Objects.isNull(cutoffHour) ? LocalTime.of(23,59) : cutoffHour;
         this.executionTime = executionTime;
         this.settlementSystemId = settlementSystemId;
     }

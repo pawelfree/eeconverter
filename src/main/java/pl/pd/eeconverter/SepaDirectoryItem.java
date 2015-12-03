@@ -28,7 +28,7 @@ public class SepaDirectoryItem {
         this.systemId = systemId;
         this.validFrom = validFrom;
         this.validTo = validTo;
-        this.cutoffTime = cutoffTime;
+        this.cutoffTime = Objects.isNull(cutoffTime) ? LocalTime.of(23,59) : cutoffTime;
     }
 
     public String getBic() {
@@ -52,7 +52,7 @@ public class SepaDirectoryItem {
     }
 
     public String getCutoffTime() {
-        return Objects.isNull(cutoffTime) ? "" : cutoffTime.format(DateTimeFormatter.ofPattern(Constants.HOUR_FORMAT));
+        return cutoffTime.format(DateTimeFormatter.ofPattern(Constants.HOUR_FORMAT));
     }
 
     public String getRoutingBic() {

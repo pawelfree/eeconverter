@@ -18,7 +18,7 @@ public class Constants {
     
     public static final String DATE_FORMAT = "yyyy-MM-dd";    
     
-    public static final String HOUR_FORMAT = "HHmm";
+    public static final String HOUR_FORMAT = "HH.mm";
     
     public static final String OF_DATE = "yyyyMMdd";
     
