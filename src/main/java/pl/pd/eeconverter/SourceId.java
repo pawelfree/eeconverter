@@ -9,9 +9,9 @@ public enum SourceId {
     Manual(10,""),
     KIR_Direct(20,"EES"),
     KIR_Indirect(20,"EES"),
-    EACHA(30,"EEM"),
-    SEPA_Direct(40,"EEM"),
-    SEPA_Indirect(40,"EEM"); 
+    EACHA(40,"EEM"),
+    SEPA_Direct(30,"EEM"),
+    SEPA_Indirect(30,"EEM"); 
     
     int priority;
     String systemId;
