@@ -1,7 +1,10 @@
 package pl.pd.eeconverter;
 
+import com.sun.javafx.scene.control.skin.VirtualFlow;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -10,7 +13,7 @@ import java.util.stream.Collectors;
  */
 public class SepaDirectory {
 
-    private final List<SepaDirectoryItem> items;
+    private List<SepaDirectoryItem> items;
 
     public SepaDirectory() {
         items = new ArrayList<>();
@@ -23,11 +26,11 @@ public class SepaDirectory {
     public void add(SepaDirectoryItem item) {
         items.add(item);
     }
-    
+
     public void addAll(List<SepaDirectoryItem> items) {
         this.items.addAll(items);
     }
-    
+
     public void clear() {
         this.items.clear();
     }
@@ -38,4 +41,12 @@ public class SepaDirectory {
                 .collect(Collectors.toList());
     }
 
+    /*
+    * zamiana BIC+XXX na BIC
+     */
+    public void clearBicXxx() {
+        Set<SepaDirectoryItem> set = new HashSet<>(items.stream().filter(item -> item.isBicAbc() || item.isBic8()).collect(Collectors.toSet()));
+        set.addAll(items.stream().filter(item -> item.isBicXxx()).map(item -> item.copyToBic8SepaDirectoryItem()).collect(Collectors.toSet()));
+        items = new ArrayList<>(set);
+    }
 }

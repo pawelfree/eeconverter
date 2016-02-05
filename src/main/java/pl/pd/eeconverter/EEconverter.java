@@ -86,6 +86,8 @@ public class EEconverter {
                             .filter(participant -> !participant.getRepresentativeBic().contains(Constants.NBP_BIC))
                             .forEach(participant -> dir.add(participant.getDirectoryItem()));
 
+                    dir.clearBicXxx();
+                    
                     instance.writeFile("ZB".concat(Constants.DATE_EURO_ELIXIR), dir.getLines());
                     
                     //IBAN 2 BIC directory
