@@ -33,7 +33,7 @@ import pl.pd.eeconverter.kir.Institution;
 public class EEFiles {
 
     private String infolder = "";
-    
+
     private String outfolder = "";
 
     private static EEFiles instance;
@@ -49,7 +49,7 @@ public class EEFiles {
             return instance;
         }
     }
-    
+
     public void setOutfolder(String outfolder) {
         this.outfolder = outfolder;
     }
@@ -78,7 +78,8 @@ public class EEFiles {
                 replaceDateElixir(SctParticipant.FILE_MASK),
                 replaceDateElixir(EeIndirectParticipant.FILE_MASK),
                 replaceDateElixir(EeDirectParticipant.FILE_MASK),
-                replaceDateElixir(Institution.FILE_MASK)));
+                replaceDateElixir(Institution.FILE_MASK),
+                replaceDateElixir(EeReplacement.FILE_MASK)));
 
         return lst.stream().allMatch(item -> Files.exists(Paths.get(path.toString(), item)));
     }
@@ -146,11 +147,11 @@ public class EEFiles {
     public void writeFile(String filename, List<String> list) throws IOException {
         if (Constants.COMPRESS_FILES) {
             compressData(filename, list);
-        }
-        else 
+        } else {
             Files.write(Paths.get("", outfolder, filename.concat(".txt")), list);
+        }
     }
-    
+
     private void compressData(String filename, List<String> list) throws IOException {
 
         try (OutputStream fileOutput = Files.newOutputStream(Paths.get("", outfolder, filename.concat(".zip")));
@@ -158,10 +159,10 @@ public class EEFiles {
 
             ZipEntry zipEntry = new ZipEntry(filename.concat(".txt"));
             zipOutput.putNextEntry(zipEntry);
-            
+
             Iterator i = list.iterator();
             while (i.hasNext()) {
-                zipOutput.write(((String)i.next()).concat("\n").getBytes("UTF-8"));
+                zipOutput.write(((String) i.next()).concat("\n").getBytes("UTF-8"));
             }
             zipOutput.closeEntry();
         } catch (IOException ex) {
