@@ -23,6 +23,4 @@ public class Constants {
     public static final String OF_DATE = "yyyyMMdd";
     
     public static final int SCT = 0;
-    
-    public static boolean COMPRESS_FILES = false;
 }

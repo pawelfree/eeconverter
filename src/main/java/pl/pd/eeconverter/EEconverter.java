@@ -23,10 +23,9 @@ public class EEconverter {
             System.out.println("Niewłaściwa liczba parametrów:\n\t"
                     + "pierwszy - data zbiorów bazowych (RRRRMMDD)\n\t"
                     + "drugi - data zbioru EACHA (RRMMDDrrmmdd)\n\t");
-
-//                    "trzeci - (opcjonalny) kompresowanie pllików            
-//                    "czwarty - (opcjonalny) względna ścieżka folderu ze zbiorami bazowmi\n\t"
-//                    "piąty - (opcjonalny) względna ścieżka do folderu zbiorów wynikowych"
+     
+//                    "trzeci - (opcjonalny) względna ścieżka folderu ze zbiorami bazowmi\n\t"
+//                    "czwarty - (opcjonalny) względna ścieżka do folderu zbiorów wynikowych"
             System.out.println("Parametry wywołania : ".concat(Arrays.toString(args)));
 
         } else if (instance.verifyParams(args[0], args[1])) {
@@ -34,15 +33,12 @@ public class EEconverter {
             Constants.DATE_EURO_ELIXIR = args[0];
             Constants.DATE_EACHA = args[1];
 
-            int len = args.length;
+            int len = args.length;           
             if (len >= 3) {
-                Constants.COMPRESS_FILES = Boolean.valueOf(args[2]);
-            }            
-            if (len >= 4) {
                 Constants.INPUT_FOLDER = args[3];
                 instance.setInfolder(Constants.INPUT_FOLDER);
             }
-            if (len >= 5) {
+            if (len >= 4) {
                 Constants.OUTPUT_FOLDER = args[4];
                 instance.setOutfolder(Constants.OUTPUT_FOLDER);
             }
@@ -50,12 +46,10 @@ public class EEconverter {
             if (instance.verifyFilesExist()) {
 //TODO test dwa wpisy o różnej ważności w I2B
 //TODO daty ważności przy liczeniu I2B -> mniejsza z do 
-//TODO collector zamiast przetwarzania listy - metoda filter
 //TODO replacements
 //TODO code reuse eefiles-read 
 //TODO REMEMBER w nowym elixirze beda inne zbiory i inne kodowanie znakow (UTF-8)
-//        instance.readParticipants("20151015").forEach(System.out::println);        
-//        instance.readSctParticipants(DATE_EURO_ELIXIR).forEach(System.out::println); 
+
                 try {
                     List<EeParticipant> directs = instance.readDirectParticipants().collect(Collectors.toList());
                     List<EeParticipant> indirects = instance.readIndirectParticipants().collect(Collectors.toList());
