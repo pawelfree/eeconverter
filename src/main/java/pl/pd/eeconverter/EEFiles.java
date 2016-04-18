@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import pl.pd.eeconverter.kir.Institution;
 
@@ -52,19 +53,37 @@ public class EEFiles {
         this.infolder = infolder;
     }
 
-    public boolean verifyParams(String param1, String param2) {
-        String regex = "[0-9]{2}((0[1-9])|(1[0-2]))([0-2]\\d|(3[0|1]))";
-
-        return Objects.nonNull(param1)
-                && Objects.nonNull(param2)
-                && param1.matches("^20".concat(regex).concat("$"))
-                && param2.matches("^".concat(regex).concat(regex).concat("$"));
-    }
-
-    public boolean verifyFilesExist() {
+    public boolean verifyFilesExist() throws IOException {
 
         Path path = Constants.INPUT_FOLDER.isEmpty() ? Paths.get("") : Paths.get("", Constants.INPUT_FOLDER);
 
+        List<String> c = Files.find(path, 1, (path1, attr) -> path1.getFileName().toString().matches("^EA[0-9]{2}((0[1-9])|(1[0-2]))([0-2]\\d|(3[0|1]))[0-9]{2}((0[1-9])|(1[0-2]))([0-2]\\d|(3[0|1]))$"))
+                .map(x -> x.getFileName().toString())
+                .collect(Collectors.toList());
+        
+        if (c.size() != 1) {
+            return false;
+        }
+        else {
+            Constants.DATE_EACHA = c.get(0).substring(2);
+        }
+        
+        c = Files.find(path, 1, (path1, attr) -> path1.getFileName().toString().matches("[a-zA-Z]{2}\\d\\d[0-9]{2}((0[1-9])|(1[0-2]))\\.[a-zA-Z][0-9]{2}"))
+            .map(x -> x.getFileName().toString())
+            .collect(Collectors.toList());
+        
+        if (c.size() < 7) {
+            return false;
+        }
+        else {
+            String date = c.get(0);
+            Constants.DATE_EURO_ELIXIR = date.substring(2,8).concat(date.substring(10));
+            
+            if (c.stream().anyMatch(x -> !x.contains(date.substring(2,8).concat("."))) ) {
+                return false;
+            }
+        }               
+        
         List<String> lst = new ArrayList<>(Arrays.asList(
                 replaceDateEacha(EachaParticipant.FILE_MASK),
                 replaceDateElixir(Step2DirectParticipant.FILE_MASK),
