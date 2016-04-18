@@ -24,7 +24,7 @@ public class EEconverter {
             instance.setInfolder(Constants.INPUT_FOLDER);
 
         } else if (args.length == 2) {
-
+            
             Constants.INPUT_FOLDER = args[0];
             instance.setInfolder(Constants.INPUT_FOLDER);
 

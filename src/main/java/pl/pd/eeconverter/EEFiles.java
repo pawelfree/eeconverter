@@ -27,9 +27,9 @@ import pl.pd.eeconverter.kir.Institution;
  */
 public class EEFiles {
 
-    private String infolder = "";
+    private String infolder = Constants.INPUT_FOLDER;
 
-    private String outfolder = "";
+    private String outfolder = Constants.OUTPUT_FOLDER;
 
     private static EEFiles instance;
 

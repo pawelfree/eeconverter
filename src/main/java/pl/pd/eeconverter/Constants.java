@@ -12,9 +12,9 @@ public class Constants {
     
     public static String DATE_EACHA = "151116151122";
     
-    public static String INPUT_FOLDER = "";
+    public static String INPUT_FOLDER = "Input";
     
-    public static String OUTPUT_FOLDER = "";
+    public static String OUTPUT_FOLDER = "Output";
     
     public static final String DATE_FORMAT = "yyyy-MM-dd";
     
