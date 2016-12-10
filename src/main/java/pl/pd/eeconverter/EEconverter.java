@@ -3,7 +3,6 @@ package pl.pd.eeconverter;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
-import pl.pd.eeconverter.euroelixir.EeReplacement;
 import pl.pd.eeconverter.euroelixir.EeParticipant;
 import pl.pd.eeconverter.euroelixir.SctParticipant;
 import pl.pd.eeconverter.kir.Institution;
@@ -42,7 +41,6 @@ public class EEconverter {
             try {
                 List<EeParticipant> directs = instance.readDirectParticipants().collect(Collectors.toList());
                 List<EeParticipant> indirects = instance.readIndirectParticipants().collect(Collectors.toList());
-                List<EeReplacement> replacements = instance.readReplacements().collect(Collectors.toList());
                 List<Institution> institutions = instance.readInstitutions().collect(Collectors.toList());
                 List<SctParticipant> sctParticipants = instance.readSctParticipants().collect(Collectors.toList());
 
@@ -59,8 +57,7 @@ public class EEconverter {
 
                 sctParticipants.stream()
                         .filter(participant -> participant.getSctIndicator() > Constants.SCT)
-                        .forEach(participant -> dir.addAll(participant.getDirectoryItems(directs.stream(), indirects.stream(),
-                                replacements.stream(), institutions)));
+                        .forEach(participant -> dir.addAll(participant.getDirectoryItems(directs.stream(), indirects.stream(), institutions)));
 
                 instance.readDirectStep2Participants()
                         .forEach(participant -> dir.add(participant.getDirectoryItem()));

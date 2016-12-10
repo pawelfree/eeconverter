@@ -78,10 +78,7 @@ public class SepaDirectoryItem {
         if (!Objects.equals(this.validTo, other.validTo)) {
             return false;
         }
-        if (!Objects.equals(this.cutoffTime, other.cutoffTime)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.cutoffTime, other.cutoffTime);
     }
     
     public SepaDirectoryItem copyToBic8SepaDirectoryItem() {

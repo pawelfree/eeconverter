@@ -18,7 +18,7 @@ import pl.pd.eeconverter.kir.Institution;
  */
 public class SctParticipant {
 
-    public static final String FILE_MASK = "BKrrrrmm.Xdd";
+    public static final String FILE_MASK = "CTrrrrmm.Xdd";
 
     private final String participantBic;
 
@@ -150,8 +150,9 @@ public class SctParticipant {
                 .orElse("");
     }
 
-    public List<SepaDirectoryItem> getDirectoryItems(Stream<? extends EeParticipant> directs, Stream<? extends EeParticipant> indirects,
-            Stream<EeReplacement> replacements, List<Institution> institutions) {
+    public List<SepaDirectoryItem> getDirectoryItems(Stream<? extends EeParticipant> directs, 
+            Stream<? extends EeParticipant> indirects,
+            List<Institution> institutions) {
         List<SepaDirectoryItem> list = new ArrayList<>();
 
         list.addAll(getItems(directs, SourceId.KIR_Direct, institutions));

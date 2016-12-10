@@ -1,0 +1,58 @@
+0081Żądanie wycofania bloku komunikatów      
+0082Żądanie wycofania komunikatu             
+0023Reakcja Na Zlecenie Typu 21n ---- MB     
+0080Inf. MB do ELIXIR-C ----- wycofanie BIF  
+0121Polecenie Zaplaty                        
+0122Polecenie Zaplaty                        
+0124Polecenie Zaplaty                        
+0125Polecenie Zaplaty                        
+0129Polecenie Zaplaty                        
+0221Czek Gotowkowy                          M
+0222Czek Gotowkowy                          M
+0224Czek Gotowkowy                          M
+0225Czek Gotowkowy                          M
+0229Czek Gotowkowy                          M
+0311Czek Rozrachunkowy                      M
+0319Czek Rozrachunkowy                      M
+0321Czek Rozliczeniowy                      M
+0322Czek Rozliczeniowy                      M
+0324Czek Rozliczeniowy                      M
+0325Czek Rozliczeniowy                      M
+0329Czek Rozliczeniowy                      M
+0373Czek Rozrachunkowy                      M
+0374Czek Rozrachunkowy                      M
+0521Bankowa Nota Memorialowa                 
+0522Bankowa Nota Memorialowa                 
+0524Bankowa Nota Memorialowa                 
+0525Bankowa Nota Memorialowa                 
+0529Bankowa Nota Memorialowa                 
+0721Obciążenie z tytułu GOBI                 
+0724Obciążenie z tytułu GOBI                 
+0725Obciążenie z tytułu GOBI                 
+5111Polecenie Przelewu                       
+5112Polecenie Przelewu                       
+5119Polecenie Przelewu                       
+5173Polecenie Przelewu                       
+5174Polecenie Przelewu                       
+5411Bankowy Dowod Wplaty                     
+5412Bankowy Dowod Wplaty                     
+5419Bankowy Dowod Wplaty                     
+5473Bankowy Dowod Wplaty                     
+5474Bankowy Dowod Wplaty                     
+5511Bankowa Nota Memorialowa                 
+5512Bankowa Nota Memorialowa                 
+5519Bankowa Nota Memorialowa                 
+5573Bankowa Nota Memorialowa                 
+5574Bankowa Nota Memorialowa                 
+5611Polecenie Przelewu dla MT103             
+5619Polecenie Przelewu dla MT103             
+5673Polecenie Przelewu dla MT103             
+5674Polecenie Przelewu dla MT103             
+7111Polecenie Przelewu do Urzedu Skarbowego  
+7119Polecenie Przelewu do Urzedu Skarbowego  
+7173Polecenie Przelewu do Urzedu Skarbowego  
+7174Polecenie Przelewu do Urzedu Skarbowego  
+7411Wplata gotowkowa do Urzedu Skarbowego    
+7419Wplata gotowkowa do Urzedu Skarbowego    
+7473Wplata gotowkowa do Urzedu Skarbowego    
+7474Wplata gotowkowa do Urzedu Skarbowego    

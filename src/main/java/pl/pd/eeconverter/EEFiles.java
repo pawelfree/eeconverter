@@ -6,7 +6,6 @@ import pl.pd.eeconverter.eacha.EachaParticipant;
 import pl.pd.eeconverter.euroelixir.SctParticipant;
 import pl.pd.eeconverter.euroelixir.EeDirectParticipant;
 import pl.pd.eeconverter.euroelixir.EeIndirectParticipant;
-import pl.pd.eeconverter.euroelixir.EeReplacement;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -91,8 +90,7 @@ public class EEFiles {
                 replaceDateElixir(SctParticipant.FILE_MASK),
                 replaceDateElixir(EeIndirectParticipant.FILE_MASK),
                 replaceDateElixir(EeDirectParticipant.FILE_MASK),
-                replaceDateElixir(Institution.FILE_MASK),
-                replaceDateElixir(EeReplacement.FILE_MASK)));
+                replaceDateElixir(Institution.FILE_MASK)));
 
         return lst.stream().allMatch(item -> Files.exists(Paths.get(path.toString(), item)));
     }
@@ -121,11 +119,6 @@ public class EEFiles {
                 .filter(participant -> Objects.isNull(participant.getValidTo()) ? true : !participant.getValidTo().isBefore(LocalDate.now()));
     }
 
-    public Stream<EeReplacement> readReplacements() throws IOException {
-        return readFile(replaceDateElixir(EeReplacement.FILE_MASK))
-                .map(item -> EeReplacement.getInstance(item));
-    }
-
     public Stream<EeDirectParticipant> readDirectParticipants() throws IOException {
         return readFile(replaceDateElixir(EeDirectParticipant.FILE_MASK))
                 .map(item -> EeDirectParticipant.getInstance(item))
@@ -145,7 +138,7 @@ public class EEFiles {
 
     private Stream<String> readFile(String filename) throws IOException {
         Path path = Paths.get("", infolder, filename);
-        return Files.lines(path, Charset.forName("CP852"));
+        return Files.lines(path, Charset.forName("UTF-8"));
     }
 
     private String replaceDateElixir(String mask) {
