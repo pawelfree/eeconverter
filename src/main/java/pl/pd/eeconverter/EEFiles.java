@@ -52,8 +52,7 @@ public class EEFiles {
         this.infolder = infolder;
     }
 
-    public boolean verifyFilesExist() throws IOException {
-
+    public boolean verifyEachaFileExist() throws IOException {
         Path path = Constants.INPUT_FOLDER.isEmpty() ? Paths.get("") : Paths.get("", Constants.INPUT_FOLDER);
 
         List<String> c = Files.find(path, 1, (path1, attr) -> path1.getFileName().toString().matches("^EA[0-9]{2}((0[1-9])|(1[0-2]))([0-2]\\d|(3[0|1]))[0-9]{2}((0[1-9])|(1[0-2]))([0-2]\\d|(3[0|1]))$"))
@@ -66,8 +65,18 @@ public class EEFiles {
         else {
             Constants.DATE_EACHA = c.get(0).substring(2);
         }
-        
-        c = Files.find(path, 1, (path1, attr) -> path1.getFileName().toString().matches("[a-zA-Z]{2}\\d\\d[0-9]{2}((0[1-9])|(1[0-2]))\\.[a-zA-Z][0-9]{2}"))
+  
+        List<String> lst = new ArrayList<>(Arrays.asList(
+                replaceDateEacha(EachaParticipant.FILE_MASK)));
+
+        return lst.stream().allMatch(item -> Files.exists(Paths.get(path.toString(), item)));
+    }
+    
+    public boolean verifyElixirFilesExist() throws IOException {
+
+        Path path = Constants.INPUT_FOLDER.isEmpty() ? Paths.get("") : Paths.get("", Constants.INPUT_FOLDER);
+
+        List<String> c = Files.find(path, 1, (path1, attr) -> path1.getFileName().toString().matches("[a-zA-Z]{2}\\d\\d[0-9]{2}((0[1-9])|(1[0-2]))\\.[a-zA-Z][0-9]{2}"))
             .map(x -> x.getFileName().toString())
             .collect(Collectors.toList());
         
@@ -84,7 +93,6 @@ public class EEFiles {
         }               
         
         List<String> lst = new ArrayList<>(Arrays.asList(
-                replaceDateEacha(EachaParticipant.FILE_MASK),
                 replaceDateElixir(Step2DirectParticipant.FILE_MASK),
                 replaceDateElixir(Step2IndirectParticipant.FILE_MASK),
                 replaceDateElixir(SctParticipant.FILE_MASK),

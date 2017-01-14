@@ -31,12 +31,23 @@ public class EEconverter {
             instance.setOutfolder(Constants.OUTPUT_FOLDER);
         }
 
-        if (instance.verifyFilesExist()) {
-//TODO test dwa wpisy o różnej ważności w I2B
-//TODO daty ważności przy liczeniu I2B -> mniejsza z do 
-//TODO replacements
-//TODO code reuse eefiles-read 
-//TODO REMEMBER w nowym elixirze beda inne zbiory i inne kodowanie znakow (UTF-8)
+        if (instance.verifyEachaFileExist()) {
+            try {
+                SepaDirectory dir = new SepaDirectory();
+                //EACHA directory
+                instance.readEachaParticipants()
+                        .forEach(participant -> dir.add(participant.getDirectoryItem()));
+
+                instance.writeFile("EA".concat(Constants.DATE_EACHA), dir.getLines());
+                System.out.println("Plik EA".concat(Constants.DATE_EACHA).concat(" został wygenerowany."));
+            } catch (IOException ex) {
+                System.out.println("Coś poszło nie tak podczas generowania pliku EA. " + ex.getLocalizedMessage());
+            }
+        } else {
+            System.out.println("Nie znaleziono plików wejściowych EACHA.");
+        }
+
+        if (instance.verifyElixirFilesExist()) {
 
             try {
                 List<EeParticipant> directs = instance.readDirectParticipants().collect(Collectors.toList());
@@ -46,14 +57,7 @@ public class EEconverter {
 
                 SepaDirectory dir = new SepaDirectory();
 
-                //EACHA directory
-                instance.readEachaParticipants()
-                        .forEach(participant -> dir.add(participant.getDirectoryItem()));
-
-                instance.writeFile("EA".concat(Constants.DATE_EACHA), dir.getLines());
-
                 //SEPA directory
-                dir.clear();
 
                 sctParticipants.stream()
                         .filter(participant -> participant.getSctIndicator() > Constants.SCT)
@@ -69,7 +73,8 @@ public class EEconverter {
                 dir.clearBicXxx();
 
                 instance.writeFile("ZB".concat(Constants.DATE_EURO_ELIXIR), dir.getLines());
-
+                System.out.println("Plik ZB".concat(Constants.DATE_EURO_ELIXIR).concat(" został wygenerowany."));
+                
                 //IBAN 2 BIC directory
                 Iban2BicDirectory idir = new Iban2BicDirectory();
 
@@ -82,13 +87,14 @@ public class EEconverter {
                                 participant.getParticipantNumber())));
 
                 instance.writeFile("I2B".concat(Constants.DATE_EURO_ELIXIR), idir.getLines());
-
+                System.out.println("Plik I2B".concat(Constants.DATE_EURO_ELIXIR).concat(" został wygenerowany."));
+                
             } catch (IOException ex) {
-                System.out.println("Coś poszło nie tak podczas generowania plików. " + ex.getLocalizedMessage());
+                System.out.println("Coś poszło nie tak podczas generowania plików I2B lub ZB. " + ex.getLocalizedMessage());
             }
 
         } else {
-            System.out.println("Nie znaleziono plików wejściowych.");
+            System.out.println("Nie znaleziono plików wejściowych elixir.");
         }
     }
 
